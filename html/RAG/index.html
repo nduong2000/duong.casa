@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Q&A - powered by Ollama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6ee0;
+            --secondary-color: #45a29e;
+            --background-color: #f0f2f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e1e4e8;
+            --user-bubble: #e1efff;
+            --bot-bubble: #f7f7f8;
+            --user-bubble-text: #000000;
+            --bot-bubble-text: #343541;
+            --loading-color: #a3a3a3;
+            --sidebar-bg: #1e1e2e;
+            --sidebar-text: #ffffff;
+            --sidebar-item-bg: #313244;
+            --sidebar-item-hover: #45475a;
+            --sidebar-item-active: #585b70;
+            --error-color: #e53935;
+            --success-color: #43a047;
+            --warning-color: #fb8c00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            margin-left: 10px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #a6adc8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .example-questions {
+            background-color: var(--sidebar-item-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .question-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .question-option:hover {
+            background-color: var(--sidebar-item-hover);
+        }
+
+        .question-option i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .settings-panel {
+            background-color: var(--sidebar-item-bg);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .settings-group {
+            margin-bottom: 15px;
+        }
+
+        .settings-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #cdd6f4;
+        }
+
+        .settings-group select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #45475a;
+            background-color: var(--sidebar-bg);
+            color: #cdd6f4;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-color);
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header-title h2 {
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chat-header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .header-button:hover {
+            background-color: var(--background-color);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 90%;
+        }
+
+        .message-user {
+            align-self: flex-end;
+        }
+
+        .message-bot {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message-user .message-bubble {
+            background-color: var(--user-bubble);
+            color: var(--user-bubble-text);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bot .message-bubble {
+            background-color: var(--bot-bubble);
+            color: var(--bot-bubble-text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-sender {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .message-user .message-sender {
+            text-align: right;
+        }
+
+        .message-content {
+            line-height: 1.5;
+        }
+
+        .message-content p, 
+        .message-content h1, 
+        .message-content h2, 
+        .message-content h3, 
+        .message-content h4 {
+            margin-bottom: 10px;
+        }
+
+        .message-content p:last-child, 
+        .message-content h1:last-child, 
+        .message-content h2:last-child, 
+        .message-content h3:last-child, 
+        .message-content h4:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-content pre {
+            margin: 10px 0;
+            background-color: #282c34;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .message-content pre:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-content code:not(pre code) {
+            background-color: rgba(0,0,0,0.05);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .message-content ul, 
+        .message-content ol {
+            margin-bottom: 10px;
+            margin-left: 20px;
+        }
+
+        .message-timestamp {
+            font-size: 0.7rem;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .message-user .message-timestamp {
+            text-align: right;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--loading-color);
+            margin: 0 2px;
+            animation: bounce 1.5s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .input-container {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-input-wrapper {
+            position: relative;
+            display: flex;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 45px 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: none;
+            transition: border-color 0.2s;
+            height: 50px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .send-button {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .send-button:hover {
+            background-color: #3957c2;
+        }
+
+        .send-button:disabled {
+            background-color: #a6adc8;
+            cursor: not-allowed;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-color);
+            color: var(--text-color);
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .notification.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+        }
+
+        .notification.error .notification-icon {
+            color: var(--error-color);
+        }
+
+        .notification.success .notification-icon {
+            color: var(--success-color);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                transition: left 0.3s;
+            }
+
+            .sidebar.visible {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Dark theme by default - Matching your Ollama interface */
+        body {
+            --background-color: #121212;
+            --card-color: #1e1e2e;
+            --text-color: #e0e0e0;
+            --border-color: #313244;
+            --user-bubble: #2d4e8a;
+            --bot-bubble: #2f3136;
+            --user-bubble-text: #ffffff;
+            --bot-bubble-text: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-file-alt fa-lg"></i>
+                <h2>Resume Q&A</h2>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Example Questions</h3>
+                <div class="example-questions">
+                    <div class="question-option" data-question="What skills does Nick Duong have?">
+                        <i class="fas fa-tools"></i>
+                        <span>Skills & Expertise</span>
+                    </div>
+                    <div class="question-option" data-question="What is Nick's work experience?">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Work Experience</span>
+                    </div>
+                    <div class="question-option" data-question="What is Nick's educational background?">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Education</span>
+                    </div>
+                    <div class="question-option" data-question="What certifications does Nick have?">
+                        <i class="fas fa-certificate"></i>
+                        <span>Certifications</span>
+                    </div>
+                    <div class="question-option" data-question="What programming languages does Nick know?">
+                        <i class="fas fa-code"></i>
+                        <span>Programming Languages</span>
+                    </div>
+                    <div class="question-option" data-question="What are Nick's contact details?">
+                        <i class="fas fa-address-card"></i>
+                        <span>Contact Information</span>
+                    </div>
+                    <div class="question-option" data-question="What are Nick's achievements?">
+                        <i class="fas fa-trophy"></i>
+                        <span>Achievements</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>AI Model</h3>
+                <div class="settings-panel">
+                    <div class="settings-group">
+                        <label for="model-selection">Current Model</label>
+                        <select id="model-selection">
+                            <option value="gemma3:1b" selected>Gemma 3 (1B)</option>
+                            <option value="gemma3:4b">Gemma 3 (4B)</option>
+                            <option value="llama3.2:1b">Llama 3.2 (1B)</option>
+                            <option value="llama2">Llama 2</option>
+                            <option value="deepseek-coder:1.3b">DeepSeek Coder (1.3B)</option>
+                            <option value="qwen2.5-coder:1.5b">Qwen 2.5 Coder (1.5B)</option>
+                            <option value="qwen2.5-coder:0.5b">Qwen 2.5 Coder (0.5B)</option>
+                            <option value="qwen2.5-coder:3b">Qwen 2.5 Coder (3B)</option>
+                            <option value="deepseek-r1:1.5b">DeepSeek R1 (1.5B)</option>
+                            <option value="deepseek-r1:7b">DeepSeek R1 (7B)</option>
+                            <option value="codellama:7b">Code Llama (7B)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-header-title">
+                    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <i class="fas fa-file-alt"></i>
+                    <h2>Resume Assistant</h2>
+                </div>
+                <div class="chat-header-buttons">
+                    <button class="header-button" id="clear-chat" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="message message-bot">
+                    <div class="message-sender">Resume Assistant</div>
+                    <div class="message-bubble">
+                        <div class="message-content">
+                            <p>👋 Welcome to Resume Q&A! I'm here to answer any questions about Nick Duong's resume. Also try to ask the same question to different AI models.</p>
+                            <p>You can ask about:</p>
+                            <ul>
+                                <li>Skills and expertise</li>
+                                <li>Work experience</li>
+                                <li>Education and certifications</li>
+                                <li>Programming languages</li>
+                                <li>Contact information</li>
+                                <li>Achievements and projects</li>
+                            </ul>
+                            <p>What would you like to know about Nick's resume?</p>
+                        </div>
+                    </div>
+                    <div class="message-timestamp">Just now</div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="message-input-wrapper">
+                    <textarea class="message-input" id="message-input" placeholder="Ask a question about Nick's resume.  Try asking the same question and selecting different AI models." rows="1"></textarea>
+                    <button class="send-button" id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="notification-icon fas fa-info-circle"></i>
+        <div class="notification-message">This is a notification message</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const chatMessages = document.getElementById('chat-messages');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const questionOptions = document.querySelectorAll('.question-option');
+            const modelSelection = document.getElementById('model-selection');
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const clearChatBtn = document.getElementById('clear-chat');
+            const notification = document.getElementById('notification');
+            
+            // Initialize
+            let isProcessing = false;
+
+            // Setup event listeners
+            messageInput.addEventListener('input', adjustTextareaHeight);
+            messageInput.addEventListener('keypress', handleKeyPress);
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Clear chat
+            clearChatBtn.addEventListener('click', clearChat);
+            
+            // Question options
+            questionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    messageInput.value = question;
+                    adjustTextareaHeight();
+                    
+                    // On mobile, close sidebar after selecting a question
+                    if (window.innerWidth <= 900) {
+                        sidebar.classList.remove('visible');
+                    }
+                });
+            });
+            
+            // Mobile menu toggle
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('visible');
+            });
+            
+            // Auto-focus on the input
+            messageInput.focus();
+
+            function adjustTextareaHeight() {
+                messageInput.style.height = 'auto';
+                messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+            }
+
+            function handleKeyPress(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            }
+
+            function clearChat() {
+                // Keep only the first welcome message
+                const welcomeMessage = chatMessages.querySelector('.message');
+                chatMessages.innerHTML = '';
+                if (welcomeMessage) {
+                    chatMessages.appendChild(welcomeMessage);
+                }
+                
+                // Focus on input
+                messageInput.focus();
+            }
+
+            function sendMessage() {
+                if (isProcessing) return;
+                
+                const message = messageInput.value.trim();
+                if (message === '') return;
+                
+                // Add user message to the chat
+                addUserMessage(message);
+                
+                // Clear input
+                messageInput.value = '';
+                messageInput.style.height = '50px';
+                
+                // Start AI response
+                isProcessing = true;
+                addBotMessage('', true);
+                
+                // Call API
+                callQueryResumeAPI(message);
+            }
+
+            function addUserMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message message-user';
+                
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                messageDiv.innerHTML = `
+                    <div class="message-sender">You</div>
+                    <div class="message-bubble">
+                        <div class="message-content">
+                            <p>${text}</p>
+                        </div>
+                    </div>
+                    <div class="message-timestamp">${timestamp}</div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function addBotMessage(text, isLoading = false) {
+                let messageDiv;
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                if (isLoading) {
+                    messageDiv = document.createElement('div');
+                    messageDiv.className = 'message message-bot';
+                    
+                    messageDiv.innerHTML = `
+                        <div class="message-sender">Resume Assistant</div>
+                        <div class="message-bubble">
+                            <div class="message-content">
+                                <div class="loading-dots">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-timestamp">${timestamp}</div>
+                    `;
+                    
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                } else {
+                    // Find the last bot message with loading dots and replace it
+                    const messages = document.querySelectorAll('.message-bot');
+                    if (messages.length > 0) {
+                        messageDiv = messages[messages.length - 1];
+                        
+                        // Find the message content and update it
+                        const contentDiv = messageDiv.querySelector('.message-content');
+                        if (contentDiv) {
+                            // Parse markdown and sanitize the content
+                            contentDiv.innerHTML = parseMarkdown(text);
+                            
+                            // Highlight code blocks
+                            const codeBlocks = contentDiv.querySelectorAll('pre code');
+                            codeBlocks.forEach(block => {
+                                hljs.highlightElement(block);
+                            });
+                        }
+                    }
+                }
+                
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return messageDiv;
+            }
+
+            function parseMarkdown(text) {
+                // Configure marked for code highlighting
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        try {
+                            if (lang && hljs.getLanguage(lang)) {
+                                return hljs.highlight(code, { language: lang }).value;
+                            } else {
+                                return hljs.highlightAuto(code).value;
+                            }
+                        } catch (e) {
+                            console.error('Highlight error:', e);
+                            return code;
+                        }
+                    },
+                    breaks: true,
+                    gfm: true
+                });
+                
+                // Handle special characters and escape HTML
+                text = text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+                
+                // Process the text with marked
+                return marked.parse(text);
+            }
+
+            function callQueryResumeAPI(message) {
+                // Create form data
+                const formData = new FormData();
+                formData.append('query', message);
+                
+                // Get the selected model and add it to the form data
+                const model = modelSelection.value;
+                formData.append('model', model);  // This is the fixed line
+                
+                // Call the API endpoint
+                fetch('/RAG/query-resume', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showNotification('error', data.error);
+                        addBotMessage(`I'm sorry, there was an error processing your request: ${data.error}`);
+                    } else {
+                        addBotMessage(data.answer);
+                    }
+                    isProcessing = false;
+                })
+                .catch(error => {
+                    console.error('Error calling API:', error);
+                    addBotMessage(`I'm sorry, there was an error connecting to the API. Please try again later.`);
+                    showNotification('error', 'Connection error');
+                    isProcessing = false;
+                });
+            }
+
+            function showNotification(type, message) {
+                notification.className = 'notification ' + type + ' visible';
+                
+                const iconClass = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+                
+                notification.querySelector('.notification-icon').className = `notification-icon fas ${iconClass}`;
+                notification.querySelector('.notification-message').textContent = message;
+                
+                // Hide after 3 seconds
+                setTimeout(function() {
+                    notification.classList.remove('visible');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

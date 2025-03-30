@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="nginx-favicon.svg" type="image/x-icon">
+    <title>Newton (Nick) Duong - Technical Lead & Architect</title>
+    <style>
+        :root {
+            --primary-color: #1a2a3a;
+            --secondary-color: #2563eb;
+            --accent-color: #f97316;
+            --light-color: #f8fafc;
+            --dark-color: #1a2a3a;
+            --text-color: #333;
+            --gradient-start: #2563eb;
+            --gradient-end: #4f46e5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            animation: pulse 10s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .profile-pic {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .profile-pic img {
+            width: 100%; /* Slightly larger than container to zoom in a bit */
+            height: 100%;
+            object-fit: cover;
+            object-position: 30% 30%; /* Adjust these values to position the image */
+            transform: scale(1.2); /* Zoom in to focus on you and your dog */
+            transform-origin: left top; /* Focus the zoom on the upper left */
+        }
+        
+        .profile-pic::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 10px rgba(255,255,255,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .contact-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        section {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--primary-color);
+            position: relative;
+            font-weight: 700;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 4px;
+            background-color: var(--accent-color);
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50px);
+            border-radius: 2px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-20px);
+            border-radius: 2px;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2.5rem;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 1rem;
+        }
+        
+        .project-card {
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .project-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .project-title {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .project-desc {
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .project-link {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: auto;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .project-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary-color), var(--gradient-end));
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .project-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        .project-link:hover::before {
+            opacity: 1;
+        }
+        
+        .server-info {
+            background-color: #1E293B;
+            background-image: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .server-info::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 0%, rgba(79, 70, 229, 0) 70%);
+            top: -100px;
+            right: -100px;
+            border-radius: 100%;
+        }
+        
+        .server-info::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0) 70%);
+            bottom: -75px;
+            left: -75px;
+            border-radius: 100%;
+        }
+        
+        .server-title {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .server-title::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-color);
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .server-logo {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px;
+        }
+        
+        .server-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .server-item {
+            background-color: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .server-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), #0F172A);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, 
+              rgba(255,255,255,0) 0%, 
+              rgba(255,255,255,0.3) 50%, 
+              rgba(255,255,255,0) 100%);
+            top: 0;
+            left: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-details {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-pic">
+                    <!-- The image source needs to point to where the image file is located on your server -->
+                    <img src="Nick1.jpg" alt="Nick Duong" onerror="this.src='/api/placeholder/180/180'; this.alt='Profile image Nick';" />
+                </div>
+                <h1>Newton (Nick) Duong</h1>
+                <p class="title">Technical Lead & Enterprise Architect</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <a href="mailto:duong.nick@gmail.com">duong.nick@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <a href="tel:8607294235">860-729-4235</a>
+                    </div>
+                    <div class="contact-item">
+                        <a href="https://www.linkedin.com/in/newton-nick-duong-98093b1/" target="_blank">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <p>Results-driven Technical Lead and Architect with 20+ years of experience designing and integrating enterprise-level systems. Proven expertise in cloud platforms (Azure, AWS, GCP), AI/ML tools (Ollama, DeepSeek), and modern frameworks (Spring, ReactJS, NodeJS).</p>
+                <p>I am passionate about process improvement, team leadership, and delivering scalable, innovative solutions. Currently focused on modernizing AEFW Framework Apps to SpringBoot using various AI tools including Ollama models and DeepSeek-CoderV2 for code refactoring and modernization.</p>
+                <p>My technical skills include:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Languages:</strong> Java, JavaScript, Python</li>
+                    <li><strong>Cloud Platforms:</strong> Microsoft Azure, Google Cloud Platform, AWS</li>
+                    <li><strong>AI/ML Tools:</strong> Ollama, DeepSeek, Gemma, LLaMA, Copilot, LM Studio</li>
+                    <li><strong>Frameworks:</strong> Spring Boot, ReactJS, NodeJS</li>
+                    <li><strong>DevOps:</strong> Jenkins, Docker, Kubernetes, OpenShift</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3 class="project-title">Ollama Chatbot</h3>
+                        <p class="project-desc">A custom-built enterprise chatbot leveraging Ollama's open-source AI models for natural language processing and contextual responses.</p>
+                        <a href="chat/index.html" class="project-link">Explore Project</a>
+                        <br>
+                        <a href="/chat/chatbot-diagram.svg" class="project-link" style="background-color: var(--accent-color);">View Diagram</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3 class="project-title">RAG System</h3>
+                        <p class="project-desc">Retrieval Augmented Generation system for enterprise knowledge management, combining vector databases with LLM capabilities. (Working in progress.  I'm using Gemma3:1b with serveral versions of my resume.)</p>
+                        <a href="/RAG/index.html" class="project-link">Explore Project</a>
+                        <br>
+                        <a href="/RAG/rag-system-diagram.svg" class="project-link" style="background-color: var(--accent-color);">View Diagram</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3 class="project-title">Resume</h3>
+                        <p class="project-desc">My professional resume detailing 20+ years of experience in enterprise architecture and technical leadership.</p>
+                        <a href="resume.html" class="project-link">View Resume</a>
+                    </div>
+                </div>
+                
+
+            </div>
+            
+            <div class="server-info">
+                <h3 class="server-title">
+                    <div class="server-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white;">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    Server Specifications
+                </h3>
+                <div class="server-details">
+                    <div class="server-item">Dell PowerEdge T140</div>
+                    <div class="server-item">32 GB RAM</div>
+                    <div class="server-item">1 TB HD</div>
+                    <div class="server-item">Linux Rocky 9.5</div>
+                    <div class="server-item">NGINX</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Nick Duong. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

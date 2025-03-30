@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="4" fill="#009639" />
+  
+  <!-- Stylized 'N' for Nginx -->
+  <path d="M6 6 L6 26 L11 26 L11 14 L21 26 L26 26 L26 6 L21 6 L21 18 L11 6 Z" fill="white" />
+</svg>
