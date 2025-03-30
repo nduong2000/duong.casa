@@ -1,0 +1,25 @@
+name: Deploy to Rocky Linux
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'html/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }  }
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+          
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{    }} >> ~/.ssh/known_hosts
+      
+      - name: Deploy with rsync
+        run: rsync -avz --delete ./html/ ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/usr/share/nginx/html/
