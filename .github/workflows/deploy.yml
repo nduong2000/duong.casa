@@ -17,10 +17,10 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: '...just-a-placeholder-so-we-dont-get-errors..'
-          
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H -p 26090 ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
       
       - name: Deploy with rsync
-        run: rsync -avz --delete ./html/ ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/usr/share/nginx/html/
+        run: |
+          mkdir -p ~/.ssh
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+          rsync -avz -e "ssh -p 26090 -o StrictHostKeyChecking=no" --delete ./html/ ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/usr/share/nginx/html/
