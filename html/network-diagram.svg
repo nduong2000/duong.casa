@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550">
+  <!-- Background -->
+  <rect width="800" height="550" fill="#f8f9fa" />
+  
+  <!-- Internet cloud -->
+  <ellipse cx="400" cy="70" rx="100" ry="50" fill="#e6f2ff" stroke="#3498db" stroke-width="2" />
+  <text x="400" y="75" font-family="Arial" font-size="16" text-anchor="middle">Internet</text>
+  
+  <!-- Linux Server - nginx -->
+  <rect x="150" y="180" width="200" height="280" rx="10" fill="#ffe6e6" stroke="#e74c3c" stroke-width="2" />
+  <text x="250" y="205" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Linux Server</text>
+  
+  <!-- nginx logo -->
+  <rect x="200" y="225" width="100" height="40" rx="5" fill="#009639" />
+  <text x="250" y="250" font-family="Arial" font-size="16" fill="white" text-anchor="middle">nginx</text>
+  
+  <!-- nginx config blocks -->
+  <rect x="175" y="275" width="150" height="30" rx="5" fill="#f1c40f" />
+  <text x="250" y="295" font-family="Arial" font-size="12" text-anchor="middle">duong.casa.conf</text>
+  
+  <rect x="175" y="315" width="150" height="30" rx="5" fill="#f1c40f" />
+  <text x="250" y="335" font-family="Arial" font-size="12" text-anchor="middle">m4.duong.casa.conf</text>
+  
+  <rect x="175" y="355" width="150" height="30" rx="5" fill="#f1c40f" />
+  <text x="250" y="375" font-family="Arial" font-size="12" text-anchor="middle">webui.duong.casa.conf</text>
+  
+  <!-- Docker container on Linux Server -->
+  <rect x="175" y="395" width="150" height="50" rx="5" fill="#3498db" />
+  <text x="250" y="415" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Docker Container</text>
+  <rect x="190" y="425" width="120" height="20" rx="5" fill="#2ecc71" />
+  <text x="250" y="440" font-family="Arial" font-size="12" fill="white" text-anchor="middle">OpenWebUI</text>
+  
+  <!-- Mac Mini -->
+  <rect x="450" y="180" width="200" height="180" rx="10" fill="#e6f5ff" stroke="#3498db" stroke-width="2" />
+  <text x="550" y="205" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Mac Mini (m4)</text>
+  
+  <!-- Colima -->
+  <rect x="475" y="225" width="150" height="30" rx="5" fill="#9b59b6" />
+  <text x="550" y="245" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Colima</text>
+  
+  <!-- Docker container -->
+  <rect x="475" y="265" width="150" height="75" rx="5" fill="#3498db" />
+  <text x="550" y="285" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Docker Container</text>
+  
+  <!-- OpenWebUI -->
+  <rect x="490" y="295" width="120" height="30" rx="5" fill="#2ecc71" />
+  <text x="550" y="315" font-family="Arial" font-size="12" fill="white" text-anchor="middle">OpenWebUI</text>
+  
+  <!-- Connections -->
+  <!-- Internet to nginx -->
+  <line x1="400" y1="120" x2="250" y2="180" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" />
+  <polygon points="250,180 260,165 240,165" fill="#3498db" />
+  <text x="320" y="160" font-family="Arial" font-size="12" text-anchor="middle">HTTPS (443)</text>
+  
+  <!-- nginx to Mac Mini -->
+  <line x1="350" y1="320" x2="450" y2="320" stroke="#e74c3c" stroke-width="2" />
+  <polygon points="450,320 435,315 435,325" fill="#e74c3c" />
+  
+  <!-- Connection labels with background for better readability -->
+  <rect x="370" y="300" width="60" height="16" fill="#f8f9fa" fill-opacity="0.8" rx="3" />
+  <text x="400" y="312" font-family="Arial" font-size="12" text-anchor="middle">m4.duong.casa</text>
+  
+  <!-- nginx to local Docker -->
+  <line x1="250" y1="375" x2="250" y2="395" stroke="#e74c3c" stroke-width="2" />
+  <polygon points="250,395 245,380 255,380" fill="#e74c3c" />
+  
+  <rect x="305" y="380" width="105" height="16" fill="#f8f9fa" fill-opacity="0.8" rx="3" />
+  <text x="357" y="392" font-family="Arial" font-size="12" text-anchor="middle">webui.duong.casa</text>
+  
+  <!-- Domains - ENLARGED BOX -->
+  <rect x="200" y="480" width="400" height="85" rx="5" fill="#ecf0f1" stroke="#34495e" stroke-width="1" />
+  <text x="400" y="500" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Domain Mapping</text>
+  <text x="400" y="520" font-family="Arial" font-size="12" text-anchor="middle">duong.casa → Linux Server (nginx)</text>
+  <text x="400" y="540" font-family="Arial" font-size="12" text-anchor="middle">m4.duong.casa → Mac Mini M4 (OpenWebUI) via Linux Server</text>
+  <text x="400" y="560" font-family="Arial" font-size="12" text-anchor="middle">webui.duong.casa → Linux Server (OpenWebUI)</text>
+</svg>
