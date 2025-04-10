@@ -1248,7 +1248,7 @@ How can I help you today?`);
             }
             
             function checkSystemStatus() {
-                fetch('/rag/status')
+                fetch('/ASOP/status')
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'online') {
