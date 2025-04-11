@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG System - Document Upload</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+            --success-color: #4ade80;
+            --error-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 0.8rem;
+            font-size: 1.8rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-area h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-area p {
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        .status-section {
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .success .status-icon {
+            color: var(--success-color);
+        }
+
+        .error .status-icon {
+            color: var(--error-color);
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status-text h4 {
+            margin-bottom: 0.3rem;
+        }
+
+        .status-text p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .file-list-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-list-title i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .file-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .file-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .file-icon {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-right: 0.8rem;
+        }
+
+        .file-name {
+            flex: 1;
+        }
+
+        .file-size {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-right: 1rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .file-actions button {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.2s;
+        }
+
+        .file-actions button:hover {
+            color: var(--primary-color);
+        }
+
+        .navigation-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #f1f3f5;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.9rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-color);
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .notification.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+        }
+
+        .notification.error .notification-icon {
+            color: var(--error-color);
+        }
+
+        .notification.success .notification-icon {
+            color: var(--success-color);
+        }
+
+        /* System status indicator */
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-online {
+            background-color: var(--success-color);
+        }
+
+        .status-offline {
+            background-color: var(--error-color);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .upload-area {
+                padding: 1.5rem;
+            }
+
+            .navigation-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Document RAG System</h1>
+        <p>Upload documents to be processed and indexed</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-cloud-upload-alt"></i>Upload Documents</h2>
+            
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-file-pdf"></i>
+                <h3>Drag & Drop PDF Files Here</h3>
+                <p>Or click to browse files</p>
+                <button class="btn">
+                    <i class="fas fa-folder-open"></i>Choose Files
+                </button>
+                <input type="file" id="fileInput" class="file-input" accept=".pdf" multiple>
+            </div>
+            
+            <div class="status-section" id="statusSection">
+                <!-- Status messages will be added here dynamically -->
+                <div class="status-item success">
+                    <div class="status-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="status-text">
+                        <h4>System Ready</h4>
+                        <p>RAG system is ready to process documents</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-database"></i>Indexed Documents</h2>
+            
+            <div class="file-list-title">
+                <i class="fas fa-file-alt"></i>
+                <span>Recently Processed Files</span>
+            </div>
+            
+            <ul class="file-list" id="fileList">
+                <!-- File list will be populated dynamically -->
+                <li class="file-item">
+                    <i class="fas fa-file-pdf file-icon"></i>
+                    <span class="file-name">example_document.pdf</span>
+                    <span class="file-size">1.2 MB</span>
+                    <div class="file-actions">
+                        <button title="View"><i class="fas fa-eye"></i></button>
+                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </li>
+            </ul>
+            
+            <div class="system-status">
+                <div class="status-indicator status-online"></div>
+                <span>System: Online</span>
+                <span>|</span>
+                <i class="fas fa-database"></i>
+                <span id="indexStatus">Index: Loaded</span>
+            </div>
+        </div>
+
+        <div class="navigation-links">
+            <a href="index.html" class="btn">
+                <i class="fas fa-comments"></i>Go to Chat
+            </a>
+            <button class="btn btn-secondary" id="refreshStatus">
+                <i class="fas fa-sync-alt"></i>Refresh Status
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Document RAG System - A powerful Retrieval-Augmented Generation solution
+    </footer>
+
+    <!-- Notification element -->
+    <div class="notification" id="notification">
+        <i class="notification-icon fas fa-info-circle"></i>
+        <div class="notification-message">This is a notification message</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const statusSection = document.getElementById('statusSection');
+            const fileList = document.getElementById('fileList');
+            const refreshStatus = document.getElementById('refreshStatus');
+            const indexStatus = document.getElementById('indexStatus');
+            const notification = document.getElementById('notification');
+            
+            // Upload area click event
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            // File drag events
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = var(--primary-color);
+                uploadArea.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = var(--border-color);
+                uploadArea.style.backgroundColor = 'transparent';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = var(--border-color);
+                uploadArea.style.backgroundColor = 'transparent';
+                
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            // File input change event
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+
+            // Refresh status button
+            refreshStatus.addEventListener('click', checkSystemStatus);
+
+            // Initial system check
+            checkSystemStatus();
+
+            // Handle uploaded files
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Check if file is a PDF
+                    if (file.type !== 'application/pdf') {
+                        showNotification('error', 'Only PDF files are supported');
+                        continue;
+                    }
+                    
+                    // Upload file
+                    uploadFile(file);
+                }
+                
+                // Reset file input
+                fileInput.value = '';
+            }
+
+            // Upload file to server
+            function uploadFile(file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                // Add status item
+                const statusId = 'status_' + Date.now();
+                const statusItem = document.createElement('div');
+                statusItem.className = 'status-item';
+                statusItem.id = statusId;
+                statusItem.innerHTML = `
+                    <div class="status-icon">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="status-text">
+                        <h4>Uploading ${file.name}</h4>
+                        <p>Processing... Please wait</p>
+                    </div>
+                `;
+                statusSection.appendChild(statusItem);
+                
+                // Call API
+                fetch('/rag/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update status
+                        updateStatus(statusId, 'success', `${file.name} uploaded successfully`, 'File has been processed and indexed');
+                        showNotification('success', 'File uploaded and indexed successfully');
+                        
+                        // Add to file list
+                        addFileToList(file.name, formatFileSize(file.size));
+                        
+                        // Refresh status
+                        checkSystemStatus();
+                    } else {
+                        updateStatus(statusId, 'error', `Failed to upload ${file.name}`, data.error || 'An error occurred during processing');
+                        showNotification('error', data.error || 'Upload failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    updateStatus(statusId, 'error', `Failed to upload ${file.name}`, 'Connection error');
+                    showNotification('error', 'Connection error');
+                });
+            }
+
+            // Update status item
+            function updateStatus(id, type, title, message) {
+                const statusItem = document.getElementById(id);
+                if (!statusItem) return;
+                
+                statusItem.className = `status-item ${type}`;
+                
+                const icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
+                
+                statusItem.innerHTML = `
+                    <div class="status-icon">
+                        <i class="fas fa-${icon}"></i>
+                    </div>
+                    <div class="status-text">
+                        <h4>${title}</h4>
+                        <p>${message}</p>
+                    </div>
+                `;
+                
+                // Remove after 5 seconds if success
+                if (type === 'success') {
+                    setTimeout(() => {
+                        statusItem.style.opacity = '0';
+                        setTimeout(() => {
+                            if (statusItem.parentNode) {
+                                statusItem.parentNode.removeChild(statusItem);
+                            }
+                        }, 300);
+                    }, 5000);
+                }
+            }
+
+            // Add file to list
+            function addFileToList(name, size) {
+                const fileItem = document.createElement('li');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <i class="fas fa-file-pdf file-icon"></i>
+                    <span class="file-name">${name}</span>
+                    <span class="file-size">${size}</span>
+                    <div class="file-actions">
+                        <button title="View"><i class="fas fa-eye"></i></button>
+                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                
+                // Add click events to buttons
+                const viewButton = fileItem.querySelector('button[title="View"]');
+                const deleteButton = fileItem.querySelector('button[title="Delete"]');
+                
+                viewButton.addEventListener('click', function() {
+                    showNotification('info', 'View functionality not implemented yet');
+                });
+                
+                deleteButton.addEventListener('click', function() {
+                    fileItem.remove();
+                    showNotification('success', `Removed ${name} from list`);
+                });
+                
+                fileList.appendChild(fileItem);
+            }
+
+            // Check system status
+            function checkSystemStatus() {
+                refreshStatus.disabled = true;
+                refreshStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+                
+                fetch('/rag/status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusIndicator = document.querySelector('.status-indicator');
+                    
+                    if (data.status === 'online') {
+                        statusIndicator.className = 'status-indicator status-online';
+                    } else {
+                        statusIndicator.className = 'status-indicator status-offline';
+                    }
+                    
+                    indexStatus.textContent = `Index: ${data.index_loaded ? 'Loaded' : 'Not Loaded'}`;
+                })
+                .catch(error => {
+                    console.error('Error checking status:', error);
+                    const statusIndicator = document.querySelector('.status-indicator');
+                    statusIndicator.className = 'status-indicator status-offline';
+                    indexStatus.textContent = 'Index: Unknown';
+                    showNotification('error', 'Could not connect to the server');
+                })
+                .finally(() => {
+                    refreshStatus.disabled = false;
+                    refreshStatus.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Status';
+                });
+            }
+
+            // Show notification
+            function showNotification(type, message) {
+                notification.className = 'notification ' + type + ' visible';
+                
+                const iconClass = type === 'error' ? 'fa-exclamation-circle' : 
+                                 type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+                
+                notification.querySelector('.notification-icon').className = `notification-icon fas ${iconClass}`;
+                notification.querySelector('.notification-message').textContent = message;
+                
+                // Hide after 3 seconds
+                setTimeout(function() {
+                    notification.classList.remove('visible');
+                }, 3000);
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+</body>
+</html>
