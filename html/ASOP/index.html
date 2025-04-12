@@ -1013,7 +1013,7 @@ How can I help you today?`);
                 refreshBtn.disabled = true;
                 
                 // Call API to refresh index status
-                fetch('/rag/status')
+                fetch('/ASOP/status')
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'online') {
