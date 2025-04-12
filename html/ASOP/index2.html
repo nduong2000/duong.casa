@@ -954,4 +954,439 @@
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.querySelector('.sidebar');
             const questionOptions = document.querySelectorAll('.question-option');
-            const startChatBtn = document.
+            const startChatBtn = document.getElementById('start-chat-btn');
+            const hintButtons = document.querySelectorAll('.hint-button');
+            const notification = document.getElementById('notification');
+            
+            // State
+            let isProcessing = false;
+            let chatStarted = false;
+            
+            // Event listeners
+            messageInput.addEventListener('input', adjustTextareaHeight);
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            sendButton.addEventListener('click', sendMessage);
+            clearBtn.addEventListener('click', clearChat);
+            refreshBtn.addEventListener('click', checkStatus);
+            refreshIndexBtn.addEventListener('click', refreshIndex);
+            menuToggle.addEventListener('click', toggleSidebar);
+            startChatBtn.addEventListener('click', startChat);
+            
+            // Initialize
+            fetchModels();
+            checkStatus();
+            
+            // Question options
+            questionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    messageInput.value = question;
+                    adjustTextareaHeight();
+                    
+                    if (window.innerWidth <= 900) {
+                        toggleSidebar();
+                    }
+                    
+                    // Focus on input
+                    messageInput.focus();
+                });
+            });
+            
+            // Hint buttons
+            hintButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const hint = this.getAttribute('data-hint');
+                    
+                    let template = '';
+                    
+                    switch (hint) {
+                        case 'summarize':
+                            template = 'Please summarize the main points from all documents.';
+                            break;
+                        case 'compare':
+                            template = 'Compare and contrast the main topics in the documents.';
+                            break;
+                        case 'extract':
+                            template = 'Extract the key points from all documents.';    
+                        break;
+                    }
+                    
+                    messageInput.value = template;
+                    adjustTextareaHeight();
+                    messageInput.focus();
+                });
+            });
+            
+            function startChat() {
+                if (chatStarted) return;
+                
+                // Remove empty state
+                emptyState.remove();
+                
+                // Add welcome message
+                addBotMessage(`👋 Welcome to Document Chat! I'm your AI assistant to help you explore and understand your documents. 
+
+You can ask me questions about any indexed documents, and I'll use my knowledge to provide relevant information and insights. Try asking about specific topics, requesting summaries, or inquiring about relationships between concepts in your documents.
+
+How can I help you today?`);
+                
+                chatStarted = true;
+                
+                // Focus on input
+                messageInput.focus();
+            }
+            
+            function adjustTextareaHeight() {
+                messageInput.style.height = 'auto';
+                messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+            }
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('visible');
+            }
+            
+            function clearChat() {
+                if (isProcessing) return;
+                
+                chatMessages.innerHTML = '';
+                chatStarted = false;
+                
+                // Show empty state
+                chatMessages.appendChild(emptyState);
+                
+                showNotification('info', 'Chat cleared');
+            }
+            
+            function refreshIndex() {
+                if (isProcessing) return;
+                
+                refreshIndexBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                
+                // Call API to refresh index status
+                fetch(`${API_URL}/status`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'online') {
+                            showNotification('success', 'Index refreshed successfully');
+                        } else {
+                            showNotification('error', 'System appears to be offline');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error refreshing index:', error);
+                        showNotification('error', 'Failed to refresh index status');
+                    })
+                    .finally(() => {
+                        refreshIndexBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Index';
+                    });
+            }
+            
+            function sendMessage() {
+                if (isProcessing) return;
+                
+                const message = messageInput.value.trim();
+                if (message === '') return;
+                
+                // Start chat if not started
+                if (!chatStarted) {
+                    startChat();
+                }
+                
+                // Add user message
+                addUserMessage(message);
+                
+                // Clear input
+                messageInput.value = '';
+                messageInput.style.height = '54px';
+                
+                // Add loading message
+                isProcessing = true;
+                sendButton.disabled = true;
+                const botMessageElement = addBotMessage('', true);
+                
+                // Get model and top_k
+                const model = modelSelect.value;
+                const topK = parseInt(topKInput.value) || 3;
+                
+                // Call API
+                fetch(`${API_URL}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: message,
+                        model: model,
+                        top_k: topK
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        updateBotMessage(botMessageElement, `❌ Error: ${data.error}`);
+                        showNotification('error', data.error);
+                    } else {
+                        // Format sources with enhanced information
+                        let sourcesHtml = '';
+                        if (data.sources && data.sources.length > 0) {
+                            sourcesHtml = `
+                                <div class="sources-section">
+                                    <div class="sources-title">
+                                        <i class="fas fa-bookmark"></i> Sources (${data.sources.length}):
+                                    </div>
+                                    <div class="sources-list">
+                                        ${data.sources.map((source, index) => {
+                                            let scoreHtml = '';
+                                            if (source.score !== null) {
+                                                scoreHtml = `<div class="source-score">Relevance: ${source.score.toFixed(4)}</div>`;
+                                            }
+                                            
+                                            let snippetHtml = '';
+                                            if (source.text_snippet) {
+                                                snippetHtml = `<div class="source-snippet">${escapeHtml(source.text_snippet)}</div>`;
+                                            }
+                                            
+                                            return `
+                                                <div class="source-item">
+                                                    <div class="source-item-content">
+                                                        <div class="source-header">
+                                                            <div>${index + 1}. ${source.file_name || 'Unknown'} (${source.file_type || 'Unknown'})</div>
+                                                            ${scoreHtml}
+                                                        </div>
+                                                        ${snippetHtml}
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        updateBotMessage(botMessageElement, data.response, sourcesHtml);
+                        
+                        // Show notification about model used
+                        showNotification('info', `Answered using ${data.model_used} with ${data.sources ? data.sources.length : 0} documents`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    updateBotMessage(botMessageElement, '❌ Sorry, there was an error connecting to the server. Please try again later.');
+                    showNotification('error', 'Connection error');
+                })
+                .finally(() => {
+                    isProcessing = false;
+                    sendButton.disabled = false;
+                });
+            }
+            
+            function addUserMessage(text) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message message-user';
+                messageElement.innerHTML = `
+                    <div class="message-content-wrapper">
+                        <div class="message-bubble">
+                            <div class="message-content">
+                                <p>${escapeHtml(text)}</p>
+                            </div>
+                        </div>
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="message-timestamp">${timestamp}</div>
+                `;
+                
+                chatMessages.appendChild(messageElement);
+                scrollToBottom();
+                
+                return messageElement;
+            }
+            
+            function addBotMessage(text, isLoading = false) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message message-bot';
+                
+                if (isLoading) {
+                    messageElement.innerHTML = `
+                        <div class="message-content-wrapper">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <div class="message-content">
+                                    <div class="loading-dots">
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-timestamp">${timestamp}</div>
+                    `;
+                } else {
+                    messageElement.innerHTML = `
+                        <div class="message-content-wrapper">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <div class="message-content">
+                                    ${parseMarkdown(text)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-timestamp">${timestamp}</div>
+                    `;
+                }
+                
+                chatMessages.appendChild(messageElement);
+                scrollToBottom();
+                
+                return messageElement;
+            }
+            
+            function updateBotMessage(messageElement, text, sourcesHtml = '') {
+                const contentWrapper = messageElement.querySelector('.message-content-wrapper');
+                const bubble = messageElement.querySelector('.message-bubble');
+                const content = messageElement.querySelector('.message-content');
+                
+                content.innerHTML = parseMarkdown(text);
+                
+                if (sourcesHtml) {
+                    bubble.innerHTML = content.outerHTML + sourcesHtml;
+                }
+                
+                // Highlight code blocks
+                const codeBlocks = messageElement.querySelectorAll('pre code');
+                codeBlocks.forEach(block => {
+                    hljs.highlightElement(block);
+                });
+                
+                scrollToBottom();
+            }
+            
+            function parseMarkdown(text) {
+                // Configure marked options
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                        return hljs.highlight(code, { language }).value;
+                    },
+                    breaks: true,
+                    gfm: true
+                });
+                
+                // Parse and return the markdown
+                return marked.parse(text);
+            }
+            
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function showNotification(type, message) {
+                notification.className = `notification ${type}`;
+                
+                let iconClass;
+                switch (type) {
+                    case 'success':
+                        iconClass = 'fa-check-circle';
+                        break;
+                    case 'error':
+                        iconClass = 'fa-exclamation-circle';
+                        break;
+                    case 'warning':
+                        iconClass = 'fa-exclamation-triangle';
+                        break;
+                    default:
+                        iconClass = 'fa-info-circle';
+                }
+                
+                notification.innerHTML = `
+                    <i class="fas ${iconClass}"></i>
+                    <div class="notification-text">${message}</div>
+                `;
+                
+                notification.classList.add('visible');
+                
+                setTimeout(() => {
+                    notification.classList.remove('visible');
+                }, 3000);
+            }
+            
+            function checkStatus() {
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                fetch(`${API_URL}/status`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'online') {
+                            if (data.index_loaded) {
+                                showNotification('success', `System online with ${data.document_count || 0} documents indexed`);
+                                
+                                // Additional info for embedding model
+                                const embedInfo = data.embedding_model ? ` using ${data.embedding_model}` : '';
+                                
+                                // Update the chat header to show additional info
+                                document.querySelector('.chat-title').innerHTML = `Document Assistant <small style="font-size: 0.7em; opacity: 0.7;">(${data.document_count || 0} docs${embedInfo})</small>`;
+                            } else {
+                                showNotification('warning', 'No documents are indexed yet. Please run setup_rag.py first.');
+                            }
+                        } else {
+                            showNotification('error', 'System appears to be offline');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking system status:', error);
+                        showNotification('error', 'Could not connect to the server');
+                    })
+                    .finally(() => {
+                        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                    });
+            }
+            
+            function fetchModels() {
+                fetch(`${API_URL}/models`)
+                    .then(response => response.json())
+                    .then(data => {
+                        modelSelect.innerHTML = '';
+                        
+                        if (data.models && data.models.length > 0) {
+                            data.models.forEach(model => {
+                                const option = document.createElement('option');
+                                option.value = model;
+                                option.textContent = model;
+                                modelSelect.appendChild(option);
+                            });
+                        } else {
+                            // Default option if no models found
+                            const option = document.createElement('option');
+                            option.value = 'llama2';
+                            option.textContent = 'llama2 (Default)';
+                            modelSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching models:', error);
+                        // Set default option on error
+                        modelSelect.innerHTML = '<option value="llama2">llama2 (Default)</option>';
+                    });
+            }
