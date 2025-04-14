@@ -819,7 +819,7 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-robot"></i>
-                <h2>Document Chat</h2>
+                <h2>ASOP Document Chat</h2>
             </div>
 
             <div class="sidebar-section">
@@ -1346,7 +1346,7 @@ How can I help you today?`);
                                 const embedInfo = data.embedding_model ? ` using ${data.embedding_model}` : '';
                                 
                                 // Update the chat header to show additional info
-                                document.querySelector('.chat-title').innerHTML = `Document Assistant <small style="font-size: 0.7em; opacity: 0.7;">(${data.document_count || 0} docs${embedInfo})</small>`;
+                                document.querySelector('.chat-title').innerHTML = `ASOP Document Assistant <small style="font-size: 0.7em; opacity: 0.7;">(${data.document_count || 0} docs${embedInfo})</small>`;
                             } else {
                                 showNotification('warning', 'No documents are indexed yet. Please run setup_rag.py first.');
                             }
