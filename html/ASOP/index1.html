@@ -179,46 +179,6 @@
             color: white;
         }
 
-        .retrieval-settings {
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-
-        .retrieval-settings-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .retrieval-settings-header i {
-            margin-right: 10px;
-            color: var(--accent-color);
-        }
-
-        .retrieval-settings-header label {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .retrieval-settings input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .retrieval-settings input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.3);
-        }
-
         .sidebar-footer {
             margin-top: auto;
             padding: 15px 20px;
@@ -622,39 +582,14 @@
 
         .source-item {
             display: flex;
-            margin-bottom: 10px;
-            background-color: rgba(255, 255, 255, 0.5);
-            padding: 8px;
-            border-radius: 6px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .source-item-content {
-            flex: 1;
-        }
-
-        .source-header {
-            display: flex;
-            justify-content: space-between;
+            align-items: center;
             margin-bottom: 5px;
-            font-weight: 500;
         }
 
-        .source-score {
+        .source-item i {
             color: var(--primary-color);
+            margin-right: 5px;
             font-size: 0.8rem;
-        }
-
-        .source-snippet {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            background-color: rgba(0, 0, 0, 0.03);
-            padding: 6px;
-            border-radius: 4px;
-            margin-top: 5px;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            overflow-x: auto;
         }
 
         .notification {
@@ -819,7 +754,7 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-robot"></i>
-                <h2>Document Chat</h2>
+                <h2>ASOP Document Chat</h2>
             </div>
 
             <div class="sidebar-section">
@@ -845,9 +780,9 @@
                         <i class="fas fa-list"></i>
                         <span>Main Topics</span>
                     </div>
-                    <div class="question-option" data-question="How does this RAG system work?">
-                        <i class="fas fa-question-circle"></i>
-                        <span>System Overview</span>
+                    <div class="question-option" data-question="What are the conclusions from the documents?">
+                        <i class="fas fa-flag-checkered"></i>
+                        <span>Conclusions</span>
                     </div>
                 </div>
             </div>
@@ -860,25 +795,27 @@
                         <label for="model-select">AI Model</label>
                     </div>
                     <select id="model-select">
-                        <option value="llama2">llama2 (Default)</option>
+                        <option value="llama2:latest">llama2:7b</option>
+                        <option value="phi4:14b">phi4:14b</option>
+                        <option value="llama3.2:3b">llama3.2:3b</option>
+                        <option value="deepseek-r1:14b">deepseek-r1:14b</option>
+                        <option value="deepseek-coder-v2:latest">ddeepseek-coder-v2:latest</option>
+                        <option value="mistral-small:22b">mistral-small:22b</option>
+                        <option value="qwen2.5:14b">qwen2.5:14b</option>
+                        <option value="gemma3:12b">gemma3:12b</option>
+                        <option value="gemma3:4b">gemma3:4b</option>
                     </select>
-                </div>
-                
-                <div class="retrieval-settings">
-                    <div class="retrieval-settings-header">
-                        <i class="fas fa-search"></i>
-                        <label for="top-k-input">Documents to retrieve</label>
-                    </div>
-                    <input type="number" id="top-k-input" min="1" max="10" value="3">
                 </div>
             </div>
 
+            <!--
             <div class="sidebar-footer">
-                <a href="#" id="refresh-index-btn">
-                    <i class="fas fa-sync-alt"></i>
-                    Refresh Index
+                <a href="upload.html">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Upload Documents
                 </a>
             </div>
+            -->
         </div>
 
         <div class="main-content">
@@ -888,10 +825,10 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <i class="fas fa-comments chat-title-icon"></i>
-                    <h2 class="chat-title">Document Assistant</h2>
+                    <h2 class="chat-title">ASOP Document Assistant</h2>
                 </div>
                 <div class="chat-header-right">
-                    <button class="header-btn" id="refresh-btn" title="Refresh Status">
+                    <button class="header-btn" id="refresh-btn" title="Refresh Index">
                         <i class="fas fa-sync-alt"></i>
                     </button>
                     <button class="header-btn" id="clear-btn" title="Clear Chat">
@@ -903,12 +840,18 @@
             <div class="chat-messages" id="chat-messages">
                 <div class="empty-state" id="empty-state">
                     <i class="fas fa-robot"></i>
-                    <h3>Welcome to Document Chat</h3>
-                    <p>Ask questions about your indexed documents to get instant answers powered by AI. Your questions will be analyzed and matched with the most relevant content from your documents using semantic search.</p>
+                    <h3>Welcome to Actuarial Standard of Practice (ASOP) Document Chat</h3>
+                    <p>Ask questions about your indexed documents to get instant answers powered by AI. The documents can be found here:  <a href="https://www.actuarialstandardsboard.org/standards-of-practice/">https://www.actuarialstandardsboard.org/standards-of-practice/</a>. Your questions will be analyzed and matched with the most relevant content from your documents. This RAG system is running on Mac Mini M4.</p>
                     <div class="empty-state-actions">
                         <button class="empty-state-btn" id="start-chat-btn">
                             <i class="fas fa-comments"></i> Start Chatting
                         </button>
+
+                        <!--
+                        <a href="upload.html" class="empty-state-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Documents
+                        </a>-->
+
                     </div>
                 </div>
             </div>
@@ -938,19 +881,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // API endpoint - Update to match the API server port
-            const API_URL = 'https://duong.casa/ASOP';
-            
             // Elements
             const chatMessages = document.getElementById('chat-messages');
             const emptyState = document.getElementById('empty-state');
             const messageInput = document.getElementById('message-input');
             const sendButton = document.getElementById('send-button');
             const modelSelect = document.getElementById('model-select');
-            const topKInput = document.getElementById('top-k-input');
+            const modelDisplay = document.getElementById('model-display');
             const clearBtn = document.getElementById('clear-btn');
             const refreshBtn = document.getElementById('refresh-btn');
-            const refreshIndexBtn = document.getElementById('refresh-index-btn');
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.querySelector('.sidebar');
             const questionOptions = document.querySelectorAll('.question-option');
@@ -973,14 +912,15 @@
             
             sendButton.addEventListener('click', sendMessage);
             clearBtn.addEventListener('click', clearChat);
-            refreshBtn.addEventListener('click', checkStatus);
-            refreshIndexBtn.addEventListener('click', refreshIndex);
+            refreshBtn.addEventListener('click', refreshIndex);
             menuToggle.addEventListener('click', toggleSidebar);
             startChatBtn.addEventListener('click', startChat);
             
-            // Initialize
-            fetchModels();
-            checkStatus();
+            // Model selection
+            modelSelect.addEventListener('change', function() {
+                modelDisplay.textContent = modelSelect.options[modelSelect.selectedIndex].text;
+                showNotification('info', `Model changed to ${modelSelect.options[modelSelect.selectedIndex].text}`);
+            });
             
             // Question options
             questionOptions.forEach(option => {
@@ -1007,7 +947,7 @@
                     
                     switch (hint) {
                         case 'summarize':
-                            template = 'Please summarize the main points from all documents.';
+                            template = 'Please summarize all the documents in the system.';
                             break;
                         case 'compare':
                             template = 'Compare and contrast the main topics in the documents.';
@@ -1023,6 +963,9 @@
                 });
             });
             
+            // Initialize
+            checkSystemStatus();
+            
             function startChat() {
                 if (chatStarted) return;
                 
@@ -1030,9 +973,9 @@
                 emptyState.remove();
                 
                 // Add welcome message
-                addBotMessage(`👋 Welcome to Document Chat! I'm your AI assistant to help you explore and understand your documents. 
+                addBotMessage(`👋 Welcome to Actuarial Standard of Practice (ASOP) Document Chat! I'm your AI assistant to help you explore and understand your documents. 
 
-You can ask me questions about any indexed documents, and I'll use my knowledge to provide relevant information and insights. Try asking about specific topics, requesting summaries, or inquiring about relationships between concepts in your documents.
+You can ask me questions about any indexed ASOP documents, and I'll use my knowledge to provide relevant information and insights. Try asking about specific topics, requesting summaries, or inquiring about relationships between concepts in your documents.
 
 How can I help you today?`);
                 
@@ -1066,10 +1009,11 @@ How can I help you today?`);
             function refreshIndex() {
                 if (isProcessing) return;
                 
-                refreshIndexBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                refreshBtn.disabled = true;
                 
                 // Call API to refresh index status
-                fetch(`${API_URL}/status`)
+                fetch('/ASOP/status')
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'online') {
@@ -1083,7 +1027,8 @@ How can I help you today?`);
                         showNotification('error', 'Failed to refresh index status');
                     })
                     .finally(() => {
-                        refreshIndexBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Index';
+                        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                        refreshBtn.disabled = false;
                     });
             }
             
@@ -1110,20 +1055,18 @@ How can I help you today?`);
                 sendButton.disabled = true;
                 const botMessageElement = addBotMessage('', true);
                 
-                // Get model and top_k
+                // Get model
                 const model = modelSelect.value;
-                const topK = parseInt(topKInput.value) || 3;
                 
                 // Call API
-                fetch(`${API_URL}/query`, {
+                fetch('/ASOP/query', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         query: message,
-                        model: model,
-                        top_k: topK
+                        model: model
                     })
                 })
                 .then(response => response.json())
@@ -1132,47 +1075,26 @@ How can I help you today?`);
                         updateBotMessage(botMessageElement, `❌ Error: ${data.error}`);
                         showNotification('error', data.error);
                     } else {
-                        // Format sources with enhanced information
+                        // Add sources if available
                         let sourcesHtml = '';
                         if (data.sources && data.sources.length > 0) {
                             sourcesHtml = `
                                 <div class="sources-section">
                                     <div class="sources-title">
-                                        <i class="fas fa-bookmark"></i> Sources (${data.sources.length}):
+                                        <i class="fas fa-bookmark"></i> Sources:
                                     </div>
-                                    <div class="sources-list">
-                                        ${data.sources.map((source, index) => {
-                                            let scoreHtml = '';
-                                            if (source.score !== null) {
-                                                scoreHtml = `<div class="source-score">Relevance: ${source.score.toFixed(4)}</div>`;
-                                            }
-                                            
-                                            let snippetHtml = '';
-                                            if (source.text_snippet) {
-                                                snippetHtml = `<div class="source-snippet">${escapeHtml(source.text_snippet)}</div>`;
-                                            }
-                                            
-                                            return `
-                                                <div class="source-item">
-                                                    <div class="source-item-content">
-                                                        <div class="source-header">
-                                                            <div>${index + 1}. ${source.file_name || 'Unknown'} (${source.file_type || 'Unknown'})</div>
-                                                            ${scoreHtml}
-                                                        </div>
-                                                        ${snippetHtml}
-                                                    </div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
+                                    <ul class="sources-list">
+                                        ${data.sources.map(source => `
+                                            <li class="source-item">
+                                                <i class="fas fa-file-alt"></i> ${source}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
                                 </div>
                             `;
                         }
                         
                         updateBotMessage(botMessageElement, data.response, sourcesHtml);
-                        
-                        // Show notification about model used
-                        showNotification('info', `Answered using ${data.model_used} with ${data.sources ? data.sources.length : 0} documents`);
                     }
                 })
                 .catch(error => {
@@ -1332,23 +1254,15 @@ How can I help you today?`);
                 }, 3000);
             }
             
-            function checkStatus() {
-                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                
-                fetch(`${API_URL}/status`)
+            function checkSystemStatus() {
+                fetch('/ASOP/status')
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'online') {
                             if (data.index_loaded) {
-                                showNotification('success', `System online with ${data.document_count || 0} documents indexed`);
-                                
-                                // Additional info for embedding model
-                                const embedInfo = data.embedding_model ? ` using ${data.embedding_model}` : '';
-                                
-                                // Update the chat header to show additional info
-                                document.querySelector('.chat-title').innerHTML = `Document Assistant <small style="font-size: 0.7em; opacity: 0.7;">(${data.document_count || 0} docs${embedInfo})</small>`;
+                                // System is ready
                             } else {
-                                showNotification('warning', 'No documents are indexed yet. Please run setup_rag.py first.');
+                                showNotification('warning', 'No documents are indexed yet. Please upload documents first.');
                             }
                         } else {
                             showNotification('error', 'System appears to be offline');
@@ -1357,37 +1271,6 @@ How can I help you today?`);
                     .catch(error => {
                         console.error('Error checking system status:', error);
                         showNotification('error', 'Could not connect to the server');
-                    })
-                    .finally(() => {
-                        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-                    });
-            }
-            
-            function fetchModels() {
-                fetch(`${API_URL}/models`)
-                    .then(response => response.json())
-                    .then(data => {
-                        modelSelect.innerHTML = '';
-                        
-                        if (data.models && data.models.length > 0) {
-                            data.models.forEach(model => {
-                                const option = document.createElement('option');
-                                option.value = model;
-                                option.textContent = model;
-                                modelSelect.appendChild(option);
-                            });
-                        } else {
-                            // Default option if no models found
-                            const option = document.createElement('option');
-                            option.value = 'llama2';
-                            option.textContent = 'llama2 (Default)';
-                            modelSelect.appendChild(option);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching models:', error);
-                        // Set default option on error
-                        modelSelect.innerHTML = '<option value="llama2">llama2 (Default)</option>';
                     });
             }
         });
