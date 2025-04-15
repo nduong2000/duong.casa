@@ -860,7 +860,7 @@
                         <label for="model-select">AI Model</label>
                     </div>
                     <select id="model-select">
-                        <option value="llama2">llama2 (Default)</option>
+                        <option value="phi4:14b">phi4:14b (Default)</option>
                     </select>
                 </div>
                 
@@ -1379,15 +1379,15 @@ How can I help you today?`);
                         } else {
                             // Default option if no models found
                             const option = document.createElement('option');
-                            option.value = 'llama2';
-                            option.textContent = 'llama2 (Default)';
+                            option.value = 'phi4:14b';
+                            option.textContent = 'phi4:14b (Default)';
                             modelSelect.appendChild(option);
                         }
                     })
                     .catch(error => {
                         console.error('Error fetching models:', error);
                         // Set default option on error
-                        modelSelect.innerHTML = '<option value="llama2">llama2 (Default)</option>';
+                        modelSelect.innerHTML = '<option value="phi4:14b">phi4:14b (Default)</option>';
                     });
             }
         });
