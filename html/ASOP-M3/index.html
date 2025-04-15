@@ -1374,13 +1374,27 @@ How can I help you today?`);
                                 const option = document.createElement('option');
                                 option.value = model;
                                 option.textContent = model;
+                                // Set phi4:14b as the default selected option
+                                if (model === 'phi4:14b') {
+                                    option.selected = true;
+                                }
                                 modelSelect.appendChild(option);
                             });
+                            
+                            // If phi4:14b isn't in the list, select it manually
+                            if (!data.models.includes('phi4:14b')) {
+                                const option = document.createElement('option');
+                                option.value = 'phi4:14b';
+                                option.textContent = 'phi4:14b (Default)';
+                                option.selected = true;
+                                modelSelect.appendChild(option);
+                            }
                         } else {
                             // Default option if no models found
                             const option = document.createElement('option');
                             option.value = 'phi4:14b';
                             option.textContent = 'phi4:14b (Default)';
+                            option.selected = true;
                             modelSelect.appendChild(option);
                         }
                     })
