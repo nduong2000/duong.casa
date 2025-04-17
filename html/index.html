@@ -585,6 +585,80 @@
         </div>
     </section>
 
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Me</h2>
+            <div class="about-content">
+                <p>Have a question or want to work together? Fill out the form below and I'll get back to you as soon as possible.</p>
+                
+                <form action="https://formspree.io/f/mrbpvral" method="POST" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Your Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="Your Email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Your Message"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="project-link">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+        .contact-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .contact-form button {
+            margin-top: 10px;
+            cursor: pointer;
+            border: none;
+            padding: 12px 25px;
+        }
+        
+        .contact-form button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+    
     <footer>
         <div class="container">
             <p>© 2025 Nick Duong. All rights reserved.</p>
