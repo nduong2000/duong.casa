@@ -591,7 +591,7 @@
             <div class="about-content">
                 <p>Have a question? Fill out the form below and I'll get back to you as soon as possible.</p>
                 
-                <form id="contactForm" class="contact-form" onsubmit="handleSubmit(event)">
+                <form id="contactForm" class="contact-form">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" required placeholder="Your Name">
@@ -674,33 +674,50 @@
     </style>
     
     <script>
-        function handleSubmit(event) {
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
             // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            // Get status element
+            const form = event.target;
+            const formData = new FormData(form);
             const statusElement = document.getElementById('formStatus');
             
-            // Display success message (in a real implementation, you would send data to your server here)
-            statusElement.textContent = `Thank you ${name}! Your message has been received. I'll contact you at ${email} soon.`;
-            statusElement.className = 'form-status success';
-            statusElement.style.display = 'block';
-            
-            // Reset the form
-            document.getElementById('contactForm').reset();
-            
-            // For demonstration - you would replace this with your actual form submission code
-            console.log({name, email, message});
-            
-            // Hide the success message after 5 seconds
-            setTimeout(() => {
-                statusElement.style.display = 'none';
-            }, 5000);
-        }
+            // Send data to Formspree using fetch
+            fetch('https://formspree.io/f/mrbpvral', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                // Show success message
+                statusElement.textContent = 'Thank you! Your message has been sent successfully.';
+                statusElement.className = 'form-status success';
+                statusElement.style.display = 'block';
+                
+                // Reset the form
+                form.reset();
+                
+                // Hide the success message after 5 seconds
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                // Show error message
+                statusElement.textContent = 'Oops! There was a problem sending your message. Please try again.';
+                statusElement.className = 'form-status error';
+                statusElement.style.display = 'block';
+                console.error('Error:', error);
+            });
+        });
     </script>
 
     <footer>
