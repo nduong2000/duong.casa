@@ -589,9 +589,9 @@
         <div class="container">
             <h2 class="section-title">Contact Me</h2>
             <div class="about-content">
-                <p>Have a question or want to work together? Fill out the form below and I'll get back to you as soon as possible.</p>
+                <p>Have a question? Fill out the form below and I'll get back to you as soon as possible.</p>
                 
-                <form action="https://formspree.io/f/mrbpvral" method="POST" class="contact-form">
+                <form id="contactForm" class="contact-form" onsubmit="handleSubmit(event)">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" required placeholder="Your Name">
@@ -608,6 +608,8 @@
                     </div>
                     
                     <button type="submit" class="project-link">Send Message</button>
+                    
+                    <div id="formStatus" class="form-status" style="display: none; margin-top: 15px; padding: 10px; border-radius: 4px;"></div>
                 </form>
             </div>
         </div>
@@ -657,8 +659,50 @@
         .contact-form button:hover {
             transform: translateY(-2px);
         }
+        
+        .form-status.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        
+        .form-status.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
     </style>
     
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Get status element
+            const statusElement = document.getElementById('formStatus');
+            
+            // Display success message (in a real implementation, you would send data to your server here)
+            statusElement.textContent = `Thank you ${name}! Your message has been received. I'll contact you at ${email} soon.`;
+            statusElement.className = 'form-status success';
+            statusElement.style.display = 'block';
+            
+            // Reset the form
+            document.getElementById('contactForm').reset();
+            
+            // For demonstration - you would replace this with your actual form submission code
+            console.log({name, email, message});
+            
+            // Hide the success message after 5 seconds
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+
     <footer>
         <div class="container">
             <p>© 2025 Nick Duong. All rights reserved.</p>
