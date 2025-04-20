@@ -1149,8 +1149,10 @@ How can I help you today?`);
                                     <div class="sources-list">
                                         ${data.sources.map((source, index) => {
                                             let scoreHtml = '';
-                                            if (source.score !== null) {
+                                            if (source.score !== null && source.score !== undefined && !isNaN(source.score)) {
                                                 scoreHtml = `<div class="source-score">Relevance: ${source.score.toFixed(4)}</div>`;
+                                            } else {
+                                                scoreHtml = `<div class="source-score">Relevance: N/A</div>`;
                                             }
                                             
                                             let snippetHtml = '';
