@@ -1,0 +1,121 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial" font-size="24" text-anchor="middle" font-weight="bold" fill="#005C2E">Context Augmented Generation (CAG) System Architecture</text>
+  
+  <!-- Client Side -->
+  <rect x="50" y="100" width="200" height="150" rx="10" ry="10" fill="#f1f8e9" stroke="#558b2f" stroke-width="2"/>
+  <text x="150" y="120" font-family="Arial" font-size="16" text-anchor="middle" font-weight="bold">Client Interface</text>
+  
+  <!-- Client Components -->
+  <rect x="70" y="130" width="160" height="30" rx="5" ry="5" fill="#c5e1a5" stroke="#558b2f" stroke-width="1"/>
+  <text x="150" y="150" font-family="Arial" font-size="12" text-anchor="middle">Web UI</text>
+  
+  <rect x="70" y="170" width="160" height="30" rx="5" ry="5" fill="#c5e1a5" stroke="#558b2f" stroke-width="1"/>
+  <text x="150" y="190" font-family="Arial" font-size="12" text-anchor="middle">Query Input</text>
+  
+  <rect x="70" y="210" width="160" height="30" rx="5" ry="5" fill="#c5e1a5" stroke="#558b2f" stroke-width="1"/>
+  <text x="150" y="230" font-family="Arial" font-size="12" text-anchor="middle">Response Display</text>
+  
+  <!-- Server Side -->
+  <rect x="300" y="100" width="450" height="400" rx="10" ry="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="525" y="120" font-family="Arial" font-size="16" text-anchor="middle" font-weight="bold">CAG Server</text>
+  
+  <!-- Conversation Management -->
+  <rect x="320" y="130" width="180" height="100" rx="5" ry="5" fill="#bbdefb" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="150" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Conversation Context</text>
+  
+  <rect x="330" y="160" width="160" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="177" font-family="Arial" font-size="11" text-anchor="middle">Session Management</text>
+  
+  <rect x="330" y="190" width="160" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="207" font-family="Arial" font-size="11" text-anchor="middle">History Tracking</text>
+  
+  <!-- Query Processing -->
+  <rect x="320" y="240" width="180" height="130" rx="5" ry="5" fill="#bbdefb" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="260" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Query Processing</text>
+  
+  <rect x="330" y="270" width="160" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="287" font-family="Arial" font-size="11" text-anchor="middle">Intent Extraction</text>
+  
+  <rect x="330" y="300" width="160" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="317" font-family="Arial" font-size="11" text-anchor="middle">Query Variations</text>
+  
+  <rect x="330" y="330" width="160" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="410" y="347" font-family="Arial" font-size="11" text-anchor="middle">Hybrid Retrieval</text>
+  
+  <!-- Retrieval System -->
+  <rect x="520" y="130" width="210" height="160" rx="5" ry="5" fill="#bbdefb" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="150" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Retrieval System</text>
+  
+  <rect x="530" y="160" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="177" font-family="Arial" font-size="11" text-anchor="middle">Vector Database</text>
+  
+  <rect x="530" y="190" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="207" font-family="Arial" font-size="11" text-anchor="middle">BGE-M3 Embeddings</text>
+  
+  <rect x="530" y="220" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="237" font-family="Arial" font-size="11" text-anchor="middle">Document Indexing</text>
+  
+  <rect x="530" y="250" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="267" font-family="Arial" font-size="11" text-anchor="middle">Similarity Filtering</text>
+  
+  <!-- LLM Generation -->
+  <rect x="520" y="300" width="210" height="130" rx="5" ry="5" fill="#bbdefb" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="320" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Response Generation</text>
+  
+  <rect x="530" y="330" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="347" font-family="Arial" font-size="11" text-anchor="middle">Ollama Integration</text>
+  
+  <rect x="530" y="360" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="377" font-family="Arial" font-size="11" text-anchor="middle">Context Enhancement</text>
+  
+  <rect x="530" y="390" width="190" height="25" rx="3" ry="3" fill="#e3f2fd" stroke="#1565c0" stroke-width="1"/>
+  <text x="625" y="407" font-family="Arial" font-size="11" text-anchor="middle">Source Attribution</text>
+  
+  <!-- External Systems -->
+  <rect x="320" y="380" width="180" height="100" rx="5" ry="5" fill="#dcedc8" stroke="#558b2f" stroke-width="1"/>
+  <text x="410" y="400" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">System Management</text>
+  
+  <rect x="330" y="410" width="160" height="25" rx="3" ry="3" fill="#f1f8e9" stroke="#558b2f" stroke-width="1"/>
+  <text x="410" y="427" font-family="Arial" font-size="11" text-anchor="middle">API Endpoints</text>
+  
+  <rect x="330" y="440" width="160" height="25" rx="3" ry="3" fill="#f1f8e9" stroke="#558b2f" stroke-width="1"/>
+  <text x="410" y="457" font-family="Arial" font-size="11" text-anchor="middle">Status Monitoring</text>
+  
+  <!-- Data Store -->
+  <path d="M400 530 C400 550, 600 550, 600 530 L600 510 C600 490, 400 490, 400 510 Z" fill="#d1c4e9" stroke="#4527a0" stroke-width="2"/>
+  <path d="M400 510 C400 530, 600 530, 600 510" fill="none" stroke="#4527a0" stroke-width="2"/>
+  <text x="500" y="520" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Document Storage</text>
+  
+  <!-- Connections -->
+  <!-- Client to Server -->
+  <line x1="250" y1="175" x2="300" y2="175" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Internal Connections -->
+  <line x1="410" y1="230" x2="410" y2="240" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="500" y1="175" x2="520" y2="175" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="410" y1="370" x2="410" y2="380" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="625" y1="290" x2="625" y2="300" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="625" y1="430" x2="625" y2="490" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="500" y1="330" x2="520" y2="350" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Server to Client Response -->
+  <line x1="300" y1="225" x2="250" y2="225" stroke="#424242" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrowhead definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#424242"/>
+    </marker>
+  </defs>
+  
+  <!-- Key Features -->
+  <rect x="50" y="500" width="200" height="90" rx="5" ry="5" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+  <text x="150" y="520" font-family="Arial" font-size="14" text-anchor="middle" font-weight="bold">Key Features</text>
+  <text x="60" y="540" font-family="Arial" font-size="11">• Conversation Context Management</text>
+  <text x="60" y="560" font-family="Arial" font-size="11">• Intent Extraction & Query Variations</text>
+  <text x="60" y="580" font-family="Arial" font-size="11">• Advanced BGE-M3 Embeddings</text>
+</svg>
