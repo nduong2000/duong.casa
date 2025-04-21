@@ -1,0 +1,1832 @@
+btn">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh Index
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <button class="menu-toggle" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <i class="fas fa-comments chat-title-icon"></i>
+                    <h2 class="chat-title">Cache Augmented Generation (CAG) System</h2>
+                </div>
+                <div class="chat-header-right">
+                    <button class="header-btn" id="refresh-btn" title="Refresh Status">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="header-btn" id="clear-btn" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-robot"></i>
+                    <h3>Welcome to the Cache Augmented Generation System</h3>
+                    <p>Ask questions about your indexed documents to get instant answers powered by AI. This Context-Augmented Generation (CAG) system enhances traditional RAG with caching mechanisms, preloaded topics, and semantic matching for faster responses. The CAG system preloads a curated set of relevant data and caches inference states to provide faster, more consistent answers to common questions. View our <a href="system_architecture.svg">System Architecture Diagram</a> and <a href="system_workflow.svg">System Workflow Diagram</a> to understand how it works.</p>
+                    <div class="empty-state-actions">
+                        <button class="empty-state-btn" id="start-chat-btn">
+                            <i class="fas fa-comments"></i> Start Chatting
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-footer">
+                <div class="input-container">
+                    <textarea id="message-input" class="message-input" placeholder="Ask a question about your documents..." rows="1"></textarea>
+                    <button id="send-button" class="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-actions">
+                    <div class="input-hints">
+                        <button class="hint-button" data-hint="summarize">Summarize</button>
+                        <button class="hint-button" data-hint="compare">Compare</button>
+                        <button class="hint-button" data-hint="extract">Extract Key Points</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-info-circle"></i>
+        <div class="notification-text">This is a notification</div>
+    </div>
+
+    <!-- Cache Statistics Modal -->
+    <div id="cache-stats-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background-color: var(--card-color); width: 600px; max-width: 90%; border-radius: 10px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                <h3 style="color: var(--accent-color); font-size: 1.2rem;">Cache Statistics</h3>
+                <button id="close-modal-btn" style="background: none; border: none; color: var(--text-color); cursor: pointer; font-size: 1.2rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="cache-stats-content" style="max-height: 70vh; overflow-y: auto;">
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: var(--text-color); margin-bottom: 10px;">Inference Cache</h4>
+                    <div style="background-color: rgba(0,0,0,0.2); border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Cache Size:</span>
+                            <span id="cache-size">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Cache Capacity:</span>
+                            <span id="cache-capacity">1000</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Cache Utilization:</span>
+                            <span id="cache-utilization">0%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Cache Hits:</span>
+                            <span id="cache-hits">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: var(--text-color); margin-bottom: 10px;">Preloaded Topics</h4>
+                    <div id="preloaded-topics-list" style="background-color: rgba(0,0,0,0.2); border-radius: 8px; padding: 15px; max-height: 300px; overflow-y: auto;">
+                        <div style="text-align: center; color: var(--text-secondary);">No preloaded topics found</div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px;">
+                <button id="preload-topic-btn" style="background-color: var(--primary-color); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                    Preload Topic
+                </button>
+                <button id="clear-all-cache-btn" style="background-color: #d32f2f; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                    Clear All Caches
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // API endpoint - Update to match the local CAG server port
+            const API_URL = 'https://duong.casa/cache';
+            
+            // Elements
+            const chatMessages = document.getElementById('chat-messages');
+            const emptyState = document.getElementById('empty-state');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const modelSelect = document.getElementById('model-select');
+            const topKInput = document.getElementById('top-k-input');
+            const clearBtn = document.getElementById('clear-btn');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const refreshIndexBtn = document.getElementById('refresh-index-btn');
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const questionOptions = document.querySelectorAll('.question-option');
+            const startChatBtn = document.getElementById('start-chat-btn');
+            const hintButtons = document.querySelectorAll('.hint-button');
+            const notification = document.getElementById('notification');
+            const useCacheCheckbox = document.getElementById('use-cache-checkbox');
+            const clearCacheBtn = document.getElementById('clear-cache-btn');
+            const cacheStatsBtn = document.getElementById('cache-stats-btn');
+            const cacheStatsModal = document.getElementById('cache-stats-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const clearAllCacheBtn = document.getElementById('clear-all-cache-btn');
+            const preloadTopicBtn = document.getElementById('preload-topic-btn');
+
+            // Cache statistics elements
+            const cacheSize = document.getElementById('cache-size');
+            const cacheCapacity = document.getElementById('cache-capacity');
+            const cacheUtilization = document.getElementById('cache-utilization');
+            const cacheHits = document.getElementById('cache-hits');
+            const preloadedTopicsList = document.getElementById('preloaded-topics-list');
+            
+            // State
+            let isProcessing = false;
+            let chatStarted = false;
+            let cacheHitCount = 0;
+            
+            // Event listeners
+            messageInput.addEventListener('input', adjustTextareaHeight);
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            sendButton.addEventListener('click', sendMessage);
+            clearBtn.addEventListener('click', clearChat);
+            refreshBtn.addEventListener('click', checkStatus);
+            refreshIndexBtn.addEventListener('click', refreshIndex);
+            menuToggle.addEventListener('click', toggleSidebar);
+            startChatBtn.addEventListener('click', startChat);
+            clearCacheBtn.addEventListener('click', clearCache);
+            cacheStatsBtn.addEventListener('click', showCacheStats);
+            closeModalBtn.addEventListener('click', closeCacheModal);
+            clearAllCacheBtn.addEventListener('click', clearAllCaches);
+            preloadTopicBtn.addEventListener('click', showPreloadForm);
+            
+            // Initialize
+            fetchModels();
+            checkStatus();
+            
+            // Question options
+            questionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    messageInput.value = question;
+                    adjustTextareaHeight();
+                    
+                    if (window.innerWidth <= 900) {
+                        toggleSidebar();
+                    }
+                    
+                    // Focus on input
+                    messageInput.focus();
+                });
+            });
+            
+            // Hint buttons
+            hintButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const hint = this.getAttribute('data-hint');
+                    
+                    let iconClass;
+                switch (type) {
+                    case 'success':
+                        iconClass = 'fa-check-circle';
+                        break;
+                    case 'error':
+                        iconClass = 'fa-exclamation-circle';
+                        break;
+                    case 'warning':
+                        iconClass = 'fa-exclamation-triangle';
+                        break;
+                    default:
+                        iconClass = 'fa-info-circle';
+                }
+                
+                notification.innerHTML = `
+                    <i class="fas ${iconClass}"></i>
+                    <div class="notification-text">${message}</div>
+                `;
+                
+                notification.classList.add('visible');
+                
+                setTimeout(() => {
+                    notification.classList.remove('visible');
+                }, 3000);
+            }
+            
+            function checkStatus() {
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                fetch(`${API_URL}/status`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'online') {
+                            if (data.index_loaded) {
+                                showNotification('success', `System online with ${data.document_count || 0} documents indexed`);
+                                
+                                // Additional info for cache statistics
+                                let cacheInfo = '';
+                                if (data.cache_enabled) {
+                                    cacheInfo = `, Cache: ${data.cache_size || 0} items, ${data.preloaded_topics || 0} preloaded topics`;
+                                }
+                                
+                                // Update the chat header to show additional info
+                                document.querySelector('.chat-title').innerHTML = `Cache Augmented Generation (CAG) System<small style="font-size: 0.7em; opacity: 0.7; margin-left: 10px;">(${data.document_count || 0} docs${cacheInfo})</small>`;
+                            } else {
+                                showNotification('warning', 'No documents are indexed yet.');
+                            }
+                        } else {
+                            showNotification('error', 'System appears to be offline');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking system status:', error);
+                        showNotification('error', 'Could not connect to the server');
+                    })
+                    .finally(() => {
+                        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                    });
+            }
+            
+            function fetchModels() {
+                fetch(`${API_URL}/models`)
+                    .then(response => response.json())
+                    .then(data => {
+                        modelSelect.innerHTML = '';
+                        
+                        if (data.models && data.models.length > 0) {
+                            data.models.forEach(model => {
+                                const option = document.createElement('option');
+                                option.value = model;
+                                option.textContent = model;
+                                // Set phi4:14b as the default selected option
+                                if (model === 'phi4:14b') {
+                                    option.selected = true;
+                                }
+                                modelSelect.appendChild(option);
+                            });
+                            
+                            // If phi4:14b isn't in the list, select it manually
+                            if (!data.models.includes('phi4:14b')) {
+                                const option = document.createElement('option');
+                                option.value = 'phi4:14b';
+                                option.textContent = 'phi4:14b (Default)';
+                                option.selected = true;
+                                modelSelect.appendChild(option);
+                            }
+                        } else {
+                            // Default option if no models found
+                            const option = document.createElement('option');
+                            option.value = 'phi4:14b';
+                            option.textContent = 'phi4:14b (Default)';
+                            option.selected = true;
+                            modelSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching models:', error);
+                        // Set default option on error
+                        modelSelect.innerHTML = '<option value="phi4:14b">phi4:14b (Default)</option>';
+                    });
+            }
+            
+            // Close the cache stats modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                if (event.target === cacheStatsModal) {
+                    closeCacheModal();
+                }
+            });
+            
+            // Prevent propagation from the modal content
+            document.querySelector('#cache-stats-modal > div').addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html> template = '';
+                    
+                    switch (hint) {
+                        case 'summarize':
+                            template = 'Please summarize the main points from all documents.';
+                            break;
+                        case 'compare':
+                            template = 'Compare and contrast the main topics in the documents.';
+                            break;
+                        case 'extract':
+                            template = 'Extract the key points from all documents.';    
+                        break;
+                    }
+                    
+                    messageInput.value = template;
+                    adjustTextareaHeight();
+                    messageInput.focus();
+                });
+            });
+            
+            function startChat() {
+                if (chatStarted) return;
+                
+                // Remove empty state
+                emptyState.remove();
+                
+                // Add welcome message
+                addBotMessage(`👋 Welcome to the Cache Augmented Generation (CAG) System! I'm your AI assistant to help you explore your documents.
+
+This system enhances traditional RAG with advanced caching mechanisms:
+
+1. **Inference Cache**: Stores complete query results for instant retrieval
+2. **Topic Preloading**: Prepares answers for common topics in advance
+3. **Semantic Matching**: Recognizes variations of the same question
+4. **Persistent Caching**: Maintains performance across sessions
+
+You'll notice some responses are delivered almost instantly when they come from cache. Try asking similar questions in different ways to see how the semantic matching works.
+
+How can I help you today?`);
+                
+                chatStarted = true;
+                
+                // Focus on input
+                messageInput.focus();
+            }
+            
+            function adjustTextareaHeight() {
+                messageInput.style.height = 'auto';
+                messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+            }
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('visible');
+            }
+            
+            function clearChat() {
+                if (isProcessing) return;
+                
+                chatMessages.innerHTML = '';
+                chatStarted = false;
+                cacheHitCount = 0;
+                
+                // Show empty state
+                chatMessages.appendChild(emptyState);
+                
+                showNotification('info', 'Chat cleared');
+            }
+            
+            function refreshIndex() {
+                if (isProcessing) return;
+                
+                refreshIndexBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                
+                // Call API to refresh index status
+                fetch(`${API_URL}/status`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'online') {
+                            showNotification('success', 'Index refreshed successfully');
+                        } else {
+                            showNotification('error', 'System appears to be offline');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error refreshing index:', error);
+                        showNotification('error', 'Failed to refresh index status');
+                    })
+                    .finally(() => {
+                        refreshIndexBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Index';
+                    });
+            }
+            
+            function clearCache() {
+                clearCacheBtn.disabled = true;
+                
+                fetch(`${API_URL}/cache/clear`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('success', 'Cache cleared successfully');
+                    } else {
+                        showNotification('error', 'Failed to clear cache');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error clearing cache:', error);
+                    showNotification('error', 'Failed to connect to server');
+                })
+                .finally(() => {
+                    clearCacheBtn.disabled = false;
+                });
+            }
+            
+            function clearAllCaches() {
+                clearAllCacheBtn.disabled = true;
+                
+                fetch(`${API_URL}/cache/clear`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('success', 'All caches cleared successfully');
+                        updateCacheStats();
+                    } else {
+                        showNotification('error', 'Failed to clear caches');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error clearing caches:', error);
+                    showNotification('error', 'Failed to connect to server');
+                })
+                .finally(() => {
+                    clearAllCacheBtn.disabled = false;
+                });
+            }
+            
+            function showCacheStats() {
+                updateCacheStats();
+                cacheStatsModal.style.display = 'flex';
+            }
+            
+            function closeCacheModal() {
+                cacheStatsModal.style.display = 'none';
+            }
+            
+            function updateCacheStats() {
+                fetch(`${API_URL}/cache/stats`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update cache statistics
+                    const inferenceCache = data.inference_cache || {};
+                    cacheSize.textContent = inferenceCache.size || 0;
+                    cacheCapacity.textContent = inferenceCache.capacity || 1000;
+                    cacheUtilization.textContent = inferenceCache.utilization || '0%';
+                    cacheHits.textContent = cacheHitCount;
+                    
+                    // Update preloaded topics list
+                    const preloadedTopics = data.preloaded_topics || {};
+                    const topics = preloadedTopics.topics || [];
+                    
+                    if (topics.length > 0) {
+                        preloadedTopicsList.innerHTML = '';
+                        topics.forEach(topic => {
+                            const topicElement = document.createElement('div');
+                            topicElement.style.padding = '8px 0';
+                            topicElement.style.borderBottom = '1px solid var(--border-color)';
+                            
+                            topicElement.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="word-break: break-word;">${topic}</div>
+                                    <button class="remove-topic-btn" data-topic="${topic}" style="background: none; border: none; color: #d32f2f; cursor: pointer;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                            
+                            preloadedTopicsList.appendChild(topicElement);
+                        });
+                        
+                        // Add event listeners to remove buttons
+                        document.querySelectorAll('.remove-topic-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const topic = this.getAttribute('data-topic');
+                                removePreloadedTopic(topic);
+                            });
+                        });
+                    } else {
+                        preloadedTopicsList.innerHTML = '<div style="text-align: center; color: var(--text-secondary);">No preloaded topics found</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching cache stats:', error);
+                    showNotification('error', 'Failed to fetch cache statistics');
+                });
+            }
+            
+            function removePreloadedTopic(topic) {
+                fetch(`${API_URL}/preload/remove`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: topic
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('success', `Topic "${topic}" removed successfully`);
+                        updateCacheStats();
+                    } else {
+                        showNotification('error', `Failed to remove topic: ${data.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing topic:', error);
+                    showNotification('error', 'Failed to connect to server');
+                });
+            }
+            
+            function showPreloadForm() {
+                const topic = prompt('Enter a topic to preload:');
+                if (topic) {
+                    preloadTopic(topic);
+                }
+            }
+            
+            function preloadTopic(topic, description = '') {
+                preloadTopicBtn.disabled = true;
+                
+                fetch(`${API_URL}/preload`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: topic,
+                        description: description,
+                        model: modelSelect.value
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('success', `Topic "${topic}" preloaded successfully`);
+                        updateCacheStats();
+                    } else {
+                        showNotification('error', `Failed to preload topic: ${data.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error preloading topic:', error);
+                    showNotification('error', 'Failed to connect to server');
+                })
+                .finally(() => {
+                    preloadTopicBtn.disabled = false;
+                });
+            }
+            
+            function sendMessage() {
+                if (isProcessing) return;
+                
+                const message = messageInput.value.trim();
+                if (message === '') return;
+                
+                // Start chat if not started
+                if (!chatStarted) {
+                    startChat();
+                }
+                
+                // Add user message
+                addUserMessage(message);
+                
+                // Clear input
+                messageInput.value = '';
+                messageInput.style.height = '54px';
+                
+                // Add loading message
+                isProcessing = true;
+                sendButton.disabled = true;
+                const botMessageElement = addBotMessage('', true);
+                
+                // Get model and top_k
+                const model = modelSelect.value;
+                const topK = parseInt(topKInput.value) || 3;
+                const useCache = useCacheCheckbox.checked;
+                
+                // Call API - using the CAG server endpoint
+                fetch(`${API_URL}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: message,
+                        model: model,
+                        top_k: topK,
+                        session_id: 'web-session-' + Date.now(),
+                        use_context: true,
+                        intent_extraction: true,
+                        hybrid_retrieval: true,
+                        use_cache: useCache
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        updateBotMessage(botMessageElement, `❌ Error: ${data.error}`);
+                        showNotification('error', data.error);
+                    } else {
+                        // Check if this was a cache hit
+                        const isCacheHit = data.cache_hit || false;
+                        const preloadedTopic = data.preloaded_topic || null;
+                        
+                        if (isCacheHit) {
+                            cacheHitCount++;
+                        }
+                        
+                        // Format sources with enhanced information
+                        let sourcesHtml = '';
+                        if (data.sources && data.sources.length > 0) {
+                            sourcesHtml = `
+                                <div class="sources-section">
+                                    <div class="sources-title">
+                                        <i class="fas fa-bookmark"></i> Sources (${data.sources.length}):
+                                    </div>
+                                    <div class="sources-list">
+                                        ${data.sources.map((source, index) => {
+                                            let scoreHtml = '';
+                                            if (source.score !== null && source.score !== undefined && !isNaN(source.score)) {
+                                                scoreHtml = `<div class="source-score">Relevance: ${source.score.toFixed(4)}</div>`;
+                                            } else {
+                                                scoreHtml = `<div class="source-score">Relevance: N/A</div>`;
+                                            }
+                                            
+                                            let snippetHtml = '';
+                                            if (source.text_snippet) {
+                                                snippetHtml = `<div class="source-snippet">${escapeHtml(source.text_snippet)}</div>`;
+                                            }
+                                            
+                                            return `
+                                                <div class="source-item">
+                                                    <div class="source-item-content">
+                                                        <div class="source-header">
+                                                            <div>${index + 1}. ${source.file_name || 'Unknown'} (${source.file_type || 'Unknown'})</div>
+                                                            ${scoreHtml}
+                                                        </div>
+                                                        ${snippetHtml}
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        // Add cache indicator if it's a cache hit
+                        let cacheIndicator = '';
+                        if (isCacheHit) {
+                            if (preloadedTopic) {
+                                cacheIndicator = `
+                                    <div class="cache-indicator">
+                                        <i class="fas fa-database"></i> Preloaded Topic
+                                    </div>
+                                `;
+                            } else {
+                                cacheIndicator = `
+                                    <div class="cache-indicator">
+                                        <i class="fas fa-bolt"></i> Cache Hit
+                                    </div>
+                                `;
+                            }
+                        }
+                        
+                        // Process time info
+                        let processingInfo = '';
+                        if (data.processing_time) {
+                            processingInfo = `
+                                <div class="cache-info">
+                                    Processing time: ${data.processing_time}s
+                                </div>
+                            `;
+                        }
+                        
+                        updateBotMessage(botMessageElement, data.response, sourcesHtml, cacheIndicator, processingInfo);
+                        
+                        // Add retrieval details if available
+                        if (data.retrieval_details && data.retrieval_details.approach === "hybrid") {
+                            const variationsHtml = `
+                                <div class="sources-section">
+                                    <div class="sources-title">
+                                        <i class="fas fa-search"></i> Hybrid Retrieval:
+                                    </div>
+                                    <div class="sources-list">
+                                        ${data.retrieval_details.variations.map((variation, index) => {
+                                            return `
+                                                <div class="source-item">
+                                                    <div class="source-item-content">
+                                                        <div class="source-header">
+                                                            <div>Query ${index + 1}</div>
+                                                        </div>
+                                                        <div class="source-snippet">${escapeHtml(variation)}</div>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Append to the message bubble
+                            const bubble = botMessageElement.querySelector('.message-bubble');
+                            bubble.innerHTML += variationsHtml;
+                        }
+                        
+                        // Show notification about model used
+                        let responseSource = isCacheHit ? (preloadedTopic ? "preloaded topic" : "cache") : "generated";
+                        showNotification('info', `Response from ${responseSource} using ${data.model_used}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    updateBotMessage(botMessageElement, '❌ Sorry, there was an error connecting to the server. Please try again later.');
+                    showNotification('error', 'Connection error');
+                })
+                .finally(() => {
+                    isProcessing = false;
+                    sendButton.disabled = false;
+                });
+            }
+            
+            function addUserMessage(text) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message message-user';
+                messageElement.innerHTML = `
+                    <div class="message-content-wrapper">
+                        <div class="message-bubble">
+                            <div class="message-content">
+                                <p>${escapeHtml(text)}</p>
+                            </div>
+                        </div>
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="message-timestamp">${timestamp}</div>
+                `;
+                
+                chatMessages.appendChild(messageElement);
+                scrollToBottom();
+                
+                return messageElement;
+            }
+            
+            function addBotMessage(text, isLoading = false) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message message-bot';
+                
+                if (isLoading) {
+                    messageElement.innerHTML = `
+                        <div class="message-content-wrapper">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <div class="message-content">
+                                    <div class="loading-dots">
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-timestamp">${timestamp}</div>
+                    `;
+                } else {
+                    messageElement.innerHTML = `
+                        <div class="message-content-wrapper">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <div class="message-content">
+                                    ${parseMarkdown(text)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message-timestamp">${timestamp}</div>
+                    `;
+                }
+                
+                chatMessages.appendChild(messageElement);
+                scrollToBottom();
+                
+                return messageElement;
+            }
+            
+            function updateBotMessage(messageElement, text, sourcesHtml = '', cacheIndicator = '', processingInfo = '') {
+                const contentWrapper = messageElement.querySelector('.message-content-wrapper');
+                const bubble = messageElement.querySelector('.message-bubble');
+                const content = messageElement.querySelector('.message-content');
+                
+                content.innerHTML = parseMarkdown(text);
+                
+                // Add cache indicator if provided
+                if (cacheIndicator) {
+                    content.innerHTML += cacheIndicator;
+                }
+                
+                // Add processing info if provided
+                if (processingInfo) {
+                    content.innerHTML += processingInfo;
+                }
+                
+                if (sourcesHtml) {
+                    bubble.innerHTML = content.outerHTML + sourcesHtml;
+                }
+                
+                // Highlight code blocks
+                const codeBlocks = messageElement.querySelectorAll('pre code');
+                codeBlocks.forEach(block => {
+                    hljs.highlightElement(block);
+                });
+                
+                scrollToBottom();
+            }
+            
+            function parseMarkdown(text) {
+                // Configure marked options
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                        return hljs.highlight(code, { language }).value;
+                    },
+                    breaks: true,
+                    gfm: true
+                });
+                
+                // Parse and return the markdown
+                return marked.parse(text);
+            }
+            
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function showNotification(type, message) {
+                notification.className = `notification ${type}`;
+                
+                let<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAG Chat - Document Q&A</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <style>
+        :root {
+            /* Dark Green Color Scheme */
+            --primary-color: #005C2E;      /* Dark Green */
+            --primary-light: #00833E;      /* Medium Green */
+            --primary-dark: #003D1E;       /* Darker Green */
+            --secondary-color: #007556;    /* Teal Green */
+            --accent-color: #57CC99;       /* Light Mint Green */
+            --background-color: #132A13;   /* Very Dark Green */
+            --card-color: #233D23;         /* Dark Green Gray */
+            --sidebar-bg: #0B2B0B;         /* Darkest Green */
+            --sidebar-hover: #1F3F1F;      /* Dark Green Hover */
+            --sidebar-active: #2E5D2E;     /* Medium Dark Green Active */
+            --sidebar-text: #C7E8C7;       /* Light Green Text */
+            --text-color: #C7E8C7;         /* Light Green Text */
+            --text-secondary: #9AC99A;     /* Lighter Green Text */
+            --border-color: #2E5D2E;       /* Medium Dark Green Border */
+            --user-bubble: #184C18;        /* Dark Green User Bubble */
+            --user-bubble-border: #205220; /* Slightly Lighter Green Border */
+            --bot-bubble: #005C2E;         /* Dark Green Bot Bubble */
+            --bot-bubble-border: #00833E;  /* Medium Green Border */
+            --user-bubble-text: #C7E8C7;   /* Light Green Text */
+            --bot-bubble-text: #C7E8C7;    /* Light Green Text */
+            --loading-color: #57CC99;      /* Light Mint Green Loading */
+            --success-color: #57CC99;      /* Light Mint Green Success */
+            --error-color: #D32F2F;        /* Red Error */
+            --warning-color: #FF9800;      /* Orange Warning */
+            --code-background: #0B2B0B;    /* Darkest Green Code Background */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(to bottom, var(--sidebar-bg), var(--primary-dark));
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            margin-left: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-header i {
+            font-size: 24px;
+            color: var(--accent-color);
+        }
+
+        .sidebar-section {
+            padding: 15px 20px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .example-questions {
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .question-option:hover {
+            background-color: var(--sidebar-hover);
+            border-left-color: var(--accent-color);
+        }
+
+        .question-option i {
+            margin-right: 12px;
+            font-size: 1rem;
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .question-option span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .model-selection {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .model-selection-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .model-selection-header i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .model-selection-header label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .model-selection select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--primary-dark);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .model-selection select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(87, 204, 153, 0.3);
+        }
+
+        .model-selection select option {
+            background-color: var(--primary-dark);
+            color: var(--text-color);
+        }
+
+        .retrieval-settings {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .retrieval-settings-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .retrieval-settings-header i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .retrieval-settings-header label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .retrieval-settings input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--primary-dark);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .retrieval-settings input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(87, 204, 153, 0.3);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.85rem;
+        }
+
+        .sidebar-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-footer a:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        .sidebar-footer i {
+            margin-right: 8px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-color: var(--card-color);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: var(--primary-dark);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .chat-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-left: 10px;
+            color: var(--accent-color);
+        }
+
+        .chat-title-icon {
+            font-size: 20px;
+            color: var(--accent-color);
+        }
+
+        .chat-header-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+
+        .header-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--text-color);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: var(--background-color);
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+        }
+
+        .message-user {
+            align-self: flex-end;
+        }
+
+        .message-bot {
+            align-self: flex-start;
+        }
+
+        .message-content-wrapper {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .message-user .message-content-wrapper {
+            flex-direction: row-reverse;
+        }
+
+        .message-user .message-avatar {
+            margin-right: 0;
+            margin-left: 10px;
+            background-color: var(--secondary-color);
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-user .message-bubble {
+            background-color: var(--user-bubble);
+            color: var(--user-bubble-text);
+            border: 1px solid var(--user-bubble-border);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bot .message-bubble {
+            background-color: var(--bot-bubble);
+            color: var(--bot-bubble-text);
+            border: 1px solid var(--bot-bubble-border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-content {
+            line-height: 1.5;
+        }
+
+        .message-content p {
+            margin-bottom: 10px;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-color);
+        }
+
+        .message-content a:hover {
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .message-content pre {
+            margin: 10px 0;
+            background-color: var(--code-background);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .message-content code {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        }
+
+        .message-content code:not(pre code) {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--accent-color);
+        }
+
+        .message-content ul, 
+        .message-content ol {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .message-content ul li, 
+        .message-content ol li {
+            margin-bottom: 5px;
+        }
+
+        .message-timestamp {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            padding: 0 12px;
+        }
+
+        .message-user .message-timestamp {
+            text-align: right;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--loading-color);
+            margin: 0 2px;
+            animation: bounce 1.5s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .chat-footer {
+            padding: 15px 20px;
+            background-color: var(--primary-dark);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 50px 15px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: none;
+            transition: all 0.2s;
+            height: 54px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: var(--card-color);
+            color: var(--text-color);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(87, 204, 153, 0.3);
+        }
+
+        .send-button {
+            position: absolute;
+            right: 8px;
+            bottom: 10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, var(--primary-light), var(--accent-color));
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .send-button:disabled {
+            background: linear-gradient(45deg, #2B3E2B, #3A4D3A);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .input-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .input-hints {
+            display: flex;
+            gap: 8px;
+        }
+
+        .hint-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            background-color: var(--card-color);
+        }
+
+        .hint-button:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .input-info {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .sources-section {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 8px;
+        }
+
+        .sources-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sources-title i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+
+        .sources-list {
+            list-style: none;
+        }
+
+        .source-item {
+            display: flex;
+            margin-bottom: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .source-item-content {
+            flex: 1;
+        }
+
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .source-score {
+            color: var(--accent-color);
+            font-size: 0.8rem;
+        }
+
+        .source-snippet {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 6px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-dark);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 400px;
+            color: var(--text-color);
+        }
+
+        .notification.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+        }
+
+        .notification.success i {
+            color: var(--success-color);
+        }
+
+        .notification.error i {
+            color: var(--error-color);
+        }
+
+        .notification.info i {
+            color: var(--accent-color);
+        }
+
+        .notification.warning i {
+            color: var(--warning-color);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .empty-state p {
+            max-width: 600px;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .empty-state-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .empty-state-btn {
+            padding: 10px 18px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty-state-btn i {
+            font-size: 0.9rem;
+            margin-right: 6px;
+            margin-bottom: 0;
+            opacity: 1;
+        }
+
+        .empty-state-btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Cache indicator styles */
+        .cache-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+            background-color: var(--primary-dark);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .cache-indicator i {
+            margin-right: 4px;
+            font-size: 0.8rem;
+        }
+
+        .cache-info {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            margin-top: 4px;
+            text-align: right;
+            font-style: italic;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                transition: left 0.3s;
+            }
+
+            .sidebar.visible {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-messages {
+                padding: 15px 10px;
+            }
+
+            .message-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .input-hints {
+                display: none;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-robot"></i>
+                <h2>CAG System</h2>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Example Questions</h3>
+                <div class="example-questions">
+                    <div class="question-option" data-question="What documents are indexed in the system?">
+                        <i class="fas fa-database"></i>
+                        <span>Indexed Documents</span>
+                    </div>
+                    <div class="question-option" data-question="Summarize the content of all documents">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Summarize Documents</span>
+                    </div>
+                    <div class="question-option" data-question="What technologies are mentioned in the documents?">
+                        <i class="fas fa-microchip"></i>
+                        <span>Technologies</span>
+                    </div>
+                    <div class="question-option" data-question="What are the key concepts in these documents?">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Key Concepts</span>
+                    </div>
+                    <div class="question-option" data-question="What are the main topics covered?">
+                        <i class="fas fa-list"></i>
+                        <span>Main Topics</span>
+                    </div>
+                    <div class="question-option" data-question="How does this CAG system work?">
+                        <i class="fas fa-question-circle"></i>
+                        <span>System Overview</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Model Settings</h3>
+                <div class="model-selection">
+                    <div class="model-selection-header">
+                        <i class="fas fa-brain"></i>
+                        <label for="model-select">AI Model</label>
+                    </div>
+                    <select id="model-select">
+                        <option value="phi4:14b">phi4:14b (Default)</option>
+                    </select>
+                </div>
+                
+                <div class="retrieval-settings">
+                    <div class="retrieval-settings-header">
+                        <i class="fas fa-search"></i>
+                        <label for="top-k-input">Documents to retrieve</label>
+                    </div>
+                    <input type="number" id="top-k-input" min="1" max="10" value="3">
+                </div>
+
+                <div class="retrieval-settings" style="margin-top: 15px;">
+                    <div class="retrieval-settings-header">
+                        <i class="fas fa-database"></i>
+                        <label for="use-cache-checkbox">Cache Settings</label>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="use-cache-checkbox" checked style="margin-right: 5px;">
+                            <label for="use-cache-checkbox" style="font-size: 0.85rem;">Use Cache</label>
+                        </div>
+                        <button id="clear-cache-btn" style="background-color: var(--primary-color); border: none; color: white; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem;">
+                            Clear Cache
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="#" id="cache-stats-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    Cache Statistics
+                </a>
+                <a href="#" id="refresh-index-
