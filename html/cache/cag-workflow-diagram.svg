@@ -1,184 +1,135 @@
-<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="1000" height="800" fill="#f8f9fa" rx="10" ry="10" />
-  <text x="500" y="40" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle">Cache Augmented Generation (CAG) System Workflow</text>
+  <rect width="900" height="600" fill="#f5f5f5" />
   
-  <!-- Workflow Components -->
-  <!-- Initial Query Processing -->
-  <g id="initial-query">
-    <rect x="100" y="100" width="150" height="60" rx="10" ry="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" />
-    <text x="175" y="130" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">User Query</text>
-    <text x="175" y="150" font-family="Arial" font-size="12" text-anchor="middle">HTTP Request</text>
-    
-    <path d="M175 160 L175 200" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    
-    <rect x="100" y="200" width="150" height="60" rx="10" ry="10" fill="#bbdefb" stroke="#1976d2" stroke-width="2" />
-    <text x="175" y="230" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Flask API</text>
-    <text x="175" y="250" font-family="Arial" font-size="12" text-anchor="middle">Query Processing</text>
-    
-    <path d="M175 260 L175 300" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <!-- Title -->
+  <text x="450" y="40" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle">Cache Augmented Generation (CAG) System Workflow</text>
   
-  <!-- Cache Checking -->
-  <g id="cache-checking">
-    <rect x="50" y="300" width="250" height="60" rx="10" ry="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" />
-    <text x="175" y="330" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Generate Cache Key</text>
-    <text x="175" y="350" font-family="Arial" font-size="12" text-anchor="middle">MD5 Hash of Query + Parameters</text>
-    
-    <path d="M175 360 L175 400" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    
-    <rect x="50" y="400" width="250" height="60" rx="10" ry="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" />
-    <text x="175" y="425" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Check Inference Cache</text>
-    <text x="175" y="445" font-family="Arial" font-size="12" text-anchor="middle">Exact Match Lookup</text>
-    
-    <!-- Decision Path - Cache Hit -->
-    <path d="M300 430 L350 430" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    <text x="325" y="415" font-family="Arial" font-size="12" text-anchor="middle">Cache Hit</text>
-    
-    <!-- Decision Path - Cache Miss -->
-    <path d="M175 460 L175 500" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    <text x="215" y="480" font-family="Arial" font-size="12" text-anchor="middle">Cache Miss</text>
-  </g>
+  <!-- Start -->
+  <circle cx="450" cy="90" r="25" fill="#4caf50" stroke="#2e7d32" stroke-width="2" />
+  <text x="450" y="95" font-family="Arial" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Start</text>
   
-  <!-- Semantic Matching -->
-  <g id="semantic-matching">
-    <rect x="50" y="500" width="250" height="60" rx="10" ry="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" />
-    <text x="175" y="525" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Check Preloaded Topics</text>
-    <text x="175" y="545" font-family="Arial" font-size="12" text-anchor="middle">Semantic Similarity Matching</text>
-    
-    <!-- Decision Path - Topic Match -->
-    <path d="M300 530 L350 530" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    <text x="325" y="515" font-family="Arial" font-size="12" text-anchor="middle">Topic Match</text>
-    
-    <!-- Decision Path - No Match -->
-    <path d="M175 560 L175 600" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    <text x="215" y="580" font-family="Arial" font-size="12" text-anchor="middle">No Match</text>
-  </g>
+  <!-- Query Received -->
+  <rect x="375" y="140" width="150" height="40" rx="5" fill="#bbdefb" stroke="#1565c0" stroke-width="2" />
+  <text x="450" y="165" font-family="Arial" font-size="14" text-anchor="middle">Query Received</text>
   
-  <!-- Vector Search -->
-  <g id="vector-search">
-    <rect x="50" y="600" width="250" height="60" rx="10" ry="10" fill="#ffecb3" stroke="#ff8f00" stroke-width="2" />
-    <text x="175" y="625" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Query Transformation</text>
-    <text x="175" y="645" font-family="Arial" font-size="12" text-anchor="middle">(Optional)</text>
-    
-    <path d="M175 660 L175 700" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    
-    <rect x="50" y="700" width="250" height="60" rx="10" ry="10" fill="#90caf9" stroke="#1976d2" stroke-width="2" />
-    <text x="175" y="725" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Vector Search</text>
-    <text x="175" y="745" font-family="Arial" font-size="12" text-anchor="middle">LlamaIndex Query Engine</text>
-    
-    <path d="M300 730 L350 730" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <!-- Decision: Cache Hit? -->
+  <polygon points="450,200 525,240 450,280 375,240" fill="#fff3e0" stroke="#e65100" stroke-width="2" />
+  <text x="450" y="245" font-family="Arial" font-size="14" text-anchor="middle">Cache Hit?</text>
   
   <!-- Cache Hit Path -->
-  <g id="cache-hit-path">
-    <rect x="350" y="400" width="200" height="60" rx="10" ry="10" fill="#c8e6c9" stroke="#388e3c" stroke-width="2" />
-    <text x="450" y="430" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Return Cached Result</text>
-    <text x="450" y="450" font-family="Arial" font-size="12" text-anchor="middle">Fast Response</text>
-    
-    <path d="M450 400 L450 350" stroke="#388e3c" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <rect x="600" y="220" width="150" height="40" rx="5" fill="#e1bee7" stroke="#6a1b9a" stroke-width="2" />
+  <text x="675" y="245" font-family="Arial" font-size="14" text-anchor="middle">Retrieve from Cache</text>
+  
+  <!-- RAG Cache Miss Path -->
+  <!-- Decision: Topic Match? -->
+  <polygon points="450,320 525,360 450,400 375,360" fill="#fff3e0" stroke="#e65100" stroke-width="2" />
+  <text x="450" y="365" font-family="Arial" font-size="14" text-anchor="middle">Preloaded Topic?</text>
   
   <!-- Topic Match Path -->
-  <g id="topic-match-path">
-    <rect x="350" y="500" width="200" height="60" rx="10" ry="10" fill="#c8e6c9" stroke="#388e3c" stroke-width="2" />
-    <text x="450" y="525" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Return Preloaded Response</text>
-    <text x="450" y="545" font-family="Arial" font-size="12" text-anchor="middle">Semantically Similar</text>
-    
-    <path d="M450 500 L450 460" stroke="#388e3c" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <rect x="600" y="340" width="150" height="40" rx="5" fill="#e1bee7" stroke="#6a1b9a" stroke-width="2" />
+  <text x="675" y="365" font-family="Arial" font-size="14" text-anchor="middle">Use Preloaded Data</text>
   
-  <!-- LLM Generation Path -->
-  <g id="llm-generation-path">
-    <rect x="350" y="700" width="200" height="60" rx="10" ry="10" fill="#fff8e1" stroke="#ff8f00" stroke-width="2" />
-    <text x="450" y="725" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Generate Response</text>
-    <text x="450" y="745" font-family="Arial" font-size="12" text-anchor="middle">phi4:14b LLM</text>
-    
-    <path d="M550 730 L600 730" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    
-    <rect x="600" y="700" width="200" height="60" rx="10" ry="10" fill="#fff8e1" stroke="#ff8f00" stroke-width="2" />
-    <text x="700" y="725" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Self-Reflection</text>
-    <text x="700" y="745" font-family="Arial" font-size="12" text-anchor="middle">(Optional)</text>
-    
-    <path d="M700 700 L700 650" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <!-- Standard RAG Path -->
+  <!-- Query Transformation -->
+  <rect x="375" y="420" width="150" height="40" rx="5" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2" />
+  <text x="450" y="445" font-family="Arial" font-size="14" text-anchor="middle">Query Transformation</text>
   
-  <!-- Cache Update -->
-  <g id="cache-update">
-    <rect x="600" y="590" width="200" height="60" rx="10" ry="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" />
-    <text x="700" y="615" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Update Cache</text>
-    <text x="700" y="635" font-family="Arial" font-size="12" text-anchor="middle">Store for Future Queries</text>
-    
-    <path d="M700 590 L700 540" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <!-- Vector Search -->
+  <rect x="375" y="480" width="150" height="40" rx="5" fill="#b2ebf2" stroke="#006064" stroke-width="2" />
+  <text x="450" y="505" font-family="Arial" font-size="14" text-anchor="middle">Vector Search</text>
   
-  <!-- Response Delivery -->
-  <g id="response-delivery">
-    <rect x="600" y="480" width="200" height="60" rx="10" ry="10" fill="#bbdefb" stroke="#1976d2" stroke-width="2" />
-    <text x="700" y="505" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Format Response</text>
-    <text x="700" y="525" font-family="Arial" font-size="12" text-anchor="middle">Include Sources & Metadata</text>
-    
-    <path d="M700 480 L700 430" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-    
-    <rect x="600" y="370" width="200" height="60" rx="10" ry="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" />
-    <text x="700" y="400" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Return to User</text>
-    <text x="700" y="420" font-family="Arial" font-size="12" text-anchor="middle">HTTP Response</text>
-    
-    <path d="M600 400 L550 400" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)" />
-  </g>
+  <!-- Context Generation -->
+  <rect x="375" y="540" width="150" height="40" rx="5" fill="#ffe0b2" stroke="#e65100" stroke-width="2" />
+  <text x="450" y="565" font-family="Arial" font-size="14" text-anchor="middle">LLM Generation</text>
   
-  <!-- Setup Process -->
-  <g id="setup-process">
-    <rect x="600" y="100" width="300" height="200" rx="10" ry="10" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" />
-    <text x="750" y="125" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Setup Process (setup_cache.py)</text>
-    
-    <rect x="625" y="140" width="250" height="30" rx="5" ry="5" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" />
-    <text x="750" y="160" font-family="Arial" font-size="14" text-anchor="middle">Document Loading</text>
-    
-    <rect x="625" y="180" width="250" height="30" rx="5" ry="5" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" />
-    <text x="750" y="200" font-family="Arial" font-size="14" text-anchor="middle">Vector Index Creation</text>
-    
-    <rect x="625" y="220" width="250" height="30" rx="5" ry="5" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" />
-    <text x="750" y="240" font-family="Arial" font-size="14" text-anchor="middle">Extract Potential Topics</text>
-    
-    <rect x="625" y="260" width="250" height="30" rx="5" ry="5" fill="#e1bee7" stroke="#7b1fa2" stroke-width="1" />
-    <text x="750" y="280" font-family="Arial" font-size="14" text-anchor="middle">Preload Topic Responses</text>
-  </g>
+  <!-- Store in Cache -->
+  <rect x="150" y="340" width="150" height="40" rx="5" fill="#e1bee7" stroke="#6a1b9a" stroke-width="2" />
+  <text x="225" y="365" font-family="Arial" font-size="14" text-anchor="middle">Store in Cache</text>
   
-  <!-- Performance Notes -->
-  <g id="performance-notes">
-    <rect x="600" y="320" width="300" height="40" rx="5" ry="5" fill="#ede7f6" stroke="#673ab7" stroke-width="1" />
-    <text x="750" y="345" font-family="Arial" font-size="14" font-style="italic" text-anchor="middle">Note: Cache retrieval is significantly faster than LLM generation</text>
-  </g>
+  <!-- Response to User -->
+  <rect x="150" y="220" width="150" height="40" rx="5" fill="#ffcdd2" stroke="#b71c1c" stroke-width="2" />
+  <text x="225" y="245" font-family="Arial" font-size="14" text-anchor="middle">Response to User</text>
   
-  <!-- Markers and Legends -->
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2" />
-    </marker>
-  </defs>
+  <!-- Connections -->
+  <!-- Start to Query -->
+  <line x1="450" y1="115" x2="450" y2="140" stroke="#333" stroke-width="2" />
+  <polygon points="445,130 450,140 455,130" fill="#333" />
+  
+  <!-- Query to Decision -->
+  <line x1="450" y1="180" x2="450" y2="200" stroke="#333" stroke-width="2" />
+  <polygon points="445,190 450,200 455,190" fill="#333" />
+  
+  <!-- Decision to Cache Hit -->
+  <line x1="525" y1="240" x2="600" y2="240" stroke="#333" stroke-width="2" />
+  <polygon points="590,235 600,240 590,245" fill="#333" />
+  <text x="545" y="230" font-family="Arial" font-size="12" fill="#333">Yes</text>
+  
+  <!-- Decision to Topic Decision -->
+  <line x1="450" y1="280" x2="450" y2="320" stroke="#333" stroke-width="2" />
+  <polygon points="445,310 450,320 455,310" fill="#333" />
+  <text x="465" y="300" font-family="Arial" font-size="12" fill="#333">No</text>
+  
+  <!-- Topic Decision to Topic Match -->
+  <line x1="525" y1="360" x2="600" y2="360" stroke="#333" stroke-width="2" />
+  <polygon points="590,355 600,360 590,365" fill="#333" />
+  <text x="545" y="350" font-family="Arial" font-size="12" fill="#333">Yes</text>
+  
+  <!-- Topic Decision to Query Transformation -->
+  <line x1="450" y1="400" x2="450" y2="420" stroke="#333" stroke-width="2" />
+  <polygon points="445,410 450,420 455,410" fill="#333" />
+  <text x="465" y="410" font-family="Arial" font-size="12" fill="#333">No</text>
+  
+  <!-- Query Transformation to Vector Search -->
+  <line x1="450" y1="460" x2="450" y2="480" stroke="#333" stroke-width="2" />
+  <polygon points="445,470 450,480 455,470" fill="#333" />
+  
+  <!-- Vector Search to Context Generation -->
+  <line x1="450" y1="520" x2="450" y2="540" stroke="#333" stroke-width="2" />
+  <polygon points="445,530 450,540 455,530" fill="#333" />
+  
+  <!-- Context Generation to Store in Cache -->
+  <line x1="375" y1="560" x2="225" y2="380" stroke="#333" stroke-width="2" />
+  <polygon points="231,386 225,380 219,374" fill="#333" />
+  
+  <!-- Cache Hit to Response -->
+  <line x1="600" y1="240" x2="300" y2="240" stroke="#333" stroke-width="2" />
+  <polygon points="310,235 300,240 310,245" fill="#333" />
+  
+  <!-- Topic Match to Response -->
+  <line x1="675" y1="340" x2="675" y2="240" stroke="#333" stroke-width="2" />
+  <line x1="675" y1="240" x2="300" y2="240" stroke="#333" stroke-width="2" />
+  <polygon points="310,235 300,240 310,245" fill="#333" />
+  
+  <!-- Store in Cache to Response -->
+  <line x1="225" y1="340" x2="225" y2="260" stroke="#333" stroke-width="2" />
+  <polygon points="220,270 225,260 230,270" fill="#333" />
+  
+  <!-- Annotations -->
+  <rect x="600" y="120" width="200" height="70" rx="5" fill="#e3f2fd" stroke="#1565c0" stroke-width="1" opacity="0.9" />
+  <text x="700" y="140" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">Cache Hit</text>
+  <text x="700" y="160" font-family="Arial" font-size="10" text-anchor="middle">Immediate response without</text>
+  <text x="700" y="175" font-family="Arial" font-size="10" text-anchor="middle">LLM or vector DB lookups</text>
+  
+  <rect x="600" y="400" width="200" height="70" rx="5" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1" opacity="0.9" />
+  <text x="700" y="420" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">Preloaded Topic</text>
+  <text x="700" y="440" font-family="Arial" font-size="10" text-anchor="middle">Semantic matching finds similar</text>
+  <text x="700" y="455" font-family="Arial" font-size="10" text-anchor="middle">query to precomputed answers</text>
+  
+  <rect x="150" y="420" width="200" height="100" rx="5" fill="#fff3e0" stroke="#e65100" stroke-width="1" opacity="0.9" />
+  <text x="250" y="440" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">Standard RAG Process</text>
+  <text x="250" y="460" font-family="Arial" font-size="10" text-anchor="middle">1. Transform query for better retrieval</text>
+  <text x="250" y="475" font-family="Arial" font-size="10" text-anchor="middle">2. Search vector DB for relevant context</text>
+  <text x="250" y="490" font-family="Arial" font-size="10" text-anchor="middle">3. Generate response with LLM</text>
+  <text x="250" y="505" font-family="Arial" font-size="10" text-anchor="middle">4. Store result in cache for future use</text>
   
   <!-- Legend -->
-  <g id="legend" transform="translate(820, 600)">
-    <rect x="0" y="0" width="150" height="180" rx="5" ry="5" fill="#ffffff" stroke="#666666" stroke-width="1" />
-    <text x="75" y="20" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Legend</text>
-    
-    <rect x="10" y="35" width="20" height="15" fill="#e3f2fd" stroke="#1976d2" stroke-width="1" />
-    <text x="45" y="47" font-family="Arial" font-size="12">User Interface</text>
-    
-    <rect x="10" y="60" width="20" height="15" fill="#bbdefb" stroke="#1976d2" stroke-width="1" />
-    <text x="45" y="72" font-family="Arial" font-size="12">API Processing</text>
-    
-    <rect x="10" y="85" width="20" height="15" fill="#e8f5e9" stroke="#388e3c" stroke-width="1" />
-    <text x="45" y="97" font-family="Arial" font-size="12">Cache Operations</text>
-    
-    <rect x="10" y="110" width="20" height="15" fill="#c8e6c9" stroke="#388e3c" stroke-width="1" />
-    <text x="45" y="122" font-family="Arial" font-size="12">Cache Hit</text>
-    
-    <rect x="10" y="135" width="20" height="15" fill="#90caf9" stroke="#1976d2" stroke-width="1" />
-    <text x="45" y="147" font-family="Arial" font-size="12">Vector Search</text>
-    
-    <rect x="10" y="160" width="20" height="15" fill="#fff8e1" stroke="#ff8f00" stroke-width="1" />
-    <text x="45" y="172" font-family="Arial" font-size="12">LLM Processing</text>
-  </g>
+  <rect x="50" y="520" width="230" height="70" rx="5" fill="white" stroke="#333" stroke-width="1" />
+  <text x="165" y="535" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Legend</text>
+  
+  <rect x="60" y="545" width="15" height="15" rx="2" fill="#e1bee7" stroke="#6a1b9a" stroke-width="1" />
+  <text x="180" y="558" font-family="Arial" font-size="12" text-anchor="middle">Caching Operations</text>
+  
+  <rect x="60" y="570" width="15" height="15" rx="2" fill="#c8e6c9" stroke="#2e7d32" stroke-width="1" />
+  <text x="180" y="583" font-family="Arial" font-size="12" text-anchor="middle">Standard RAG Operations</text>
 </svg>
