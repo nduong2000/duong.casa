@@ -712,16 +712,13 @@ How can I help you today?`);
                     if (data.index_loaded) {
                         showNotification('success', `System online with ${data.document_count || 0} documents indexed`);
                         
-                        // Additional info for cache statistics
-                        let cacheInfo = '';
-                        if (data.cache_enabled) {
-                            cacheInfo = `, Cache: ${data.cache_size || 0} items, ${data.preloaded_topics || 0} preloaded topics`;
-                        }
+                        // Additional info for embedding model
+                        const embedInfo = data.embedding_model ? ` using ${data.embedding_model}` : '';
                         
                         // Update the chat header to show additional info
-                        document.querySelector('.chat-title').innerHTML = `Cache Augmented Generation (CAG) System<small style="font-size: 0.7em; opacity: 0.7; margin-left: 10px;">(${data.document_count || 0} docs${cacheInfo})</small>`;
+                        document.querySelector('.chat-title').innerHTML = `ASOP Document Assistant - BAAI/bge-m3<small style="font-size: 0.7em; opacity: 0.7;">(${data.document_count || 0} docs${embedInfo})</small>`;
                     } else {
-                        showNotification('warning', 'No documents are indexed yet.');
+                        showNotification('warning', 'No documents are indexed yet. Please run setup_rag.py first.');
                     }
                 } else {
                     showNotification('error', 'System appears to be offline');
