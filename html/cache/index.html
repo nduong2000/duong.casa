@@ -3,823 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAG Chat - Document Q&A</title>
+    <title>CAG Chat - Document Q&A</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="components.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #6200ea;
-            --primary-light: #9d46ff;
-            --primary-dark: #0a00b6;
-            --secondary-color: #00b0ff;
-            --accent-color: #00e5ff;
-            --background-color: #f5f7fa;
-            --card-color: #ffffff;
-            --sidebar-bg: #1a237e;
-            --sidebar-hover: #303f9f;
-            --sidebar-active: #3949ab;
-            --sidebar-text: #ffffff;
-            --text-color: #202124;
-            --text-secondary: #5f6368;
-            --border-color: #e0e0e0;
-            --user-bubble: #e3f2fd;
-            --user-bubble-border: #bbdefb;
-            --bot-bubble: #f3e5f5;
-            --bot-bubble-border: #e1bee7;
-            --user-bubble-text: #0d47a1;
-            --bot-bubble-text: #4a148c;
-            --loading-color: #9575cd;
-            --success-color: #00c853;
-            --error-color: #d50000;
-            --warning-color: #ff6d00;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .app-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(to bottom, var(--primary-color), var(--primary-dark));
-            color: var(--sidebar-text);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease;
-            z-index: 100;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.3rem;
-            margin-left: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .sidebar-header i {
-            font-size: 24px;
-            color: var(--accent-color);
-        }
-
-        .sidebar-section {
-            padding: 15px 20px;
-        }
-
-        .sidebar-section h3 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
-        }
-
-        .example-questions {
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .question-option {
-            padding: 12px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .question-option:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left-color: var(--accent-color);
-        }
-
-        .question-option i {
-            margin-right: 12px;
-            font-size: 1rem;
-            color: var(--accent-color);
-            width: 20px;
-            text-align: center;
-        }
-
-        .question-option span {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .model-selection {
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .model-selection-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .model-selection-header i {
-            margin-right: 10px;
-            color: var(--accent-color);
-        }
-
-        .model-selection-header label {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .model-selection select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .model-selection select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.3);
-        }
-
-        .model-selection select option {
-            background-color: var(--primary-dark);
-            color: white;
-        }
-
-        .retrieval-settings {
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-
-        .retrieval-settings-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .retrieval-settings-header i {
-            margin-right: 10px;
-            color: var(--accent-color);
-        }
-
-        .retrieval-settings-header label {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .retrieval-settings input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .retrieval-settings input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.3);
-        }
-
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 15px 20px;
-            background-color: rgba(0, 0, 0, 0.1);
-            font-size: 0.85rem;
-        }
-
-        .sidebar-footer a {
-            color: var(--accent-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-        }
-
-        .sidebar-footer a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-footer i {
-            margin-right: 8px;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background-color: var(--card-color);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            background-color: var(--card-color);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 10;
-        }
-
-        .chat-header-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .chat-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-left: 10px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .chat-title-icon {
-            font-size: 20px;
-            color: var(--primary-color);
-        }
-
-        .chat-header-right {
-            display: flex;
-            gap: 10px;
-        }
-
-        .header-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 50%;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-        }
-
-        .header-btn:hover {
-            background-color: var(--background-color);
-            color: var(--primary-color);
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background-color: var(--background-color);
-        }
-
-        .message {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-        }
-
-        .message-user {
-            align-self: flex-end;
-        }
-
-        .message-bot {
-            align-self: flex-start;
-        }
-
-        .message-content-wrapper {
-            display: flex;
-            align-items: flex-end;
-        }
-
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            margin-right: 10px;
-        }
-
-        .message-user .message-content-wrapper {
-            flex-direction: row-reverse;
-        }
-
-        .message-user .message-avatar {
-            margin-right: 0;
-            margin-left: 10px;
-            background-color: var(--secondary-color);
-        }
-
-        .message-bubble {
-            padding: 12px 16px;
-            border-radius: 18px;
-            position: relative;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message-user .message-bubble {
-            background-color: var(--user-bubble);
-            color: var(--user-bubble-text);
-            border: 1px solid var(--user-bubble-border);
-            border-bottom-right-radius: 4px;
-        }
-
-        .message-bot .message-bubble {
-            background-color: var(--bot-bubble);
-            color: var(--bot-bubble-text);
-            border: 1px solid var(--bot-bubble-border);
-            border-bottom-left-radius: 4px;
-        }
-
-        .message-content {
-            line-height: 1.5;
-        }
-
-        .message-content p {
-            margin-bottom: 10px;
-        }
-
-        .message-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .message-content a {
-            color: var(--primary-color);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--primary-color);
-        }
-
-        .message-content a:hover {
-            border-bottom: 1px solid var(--primary-color);
-        }
-
-        .message-content pre {
-            margin: 10px 0;
-            background-color: #282c34;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .message-content code {
-            font-family: 'Fira Code', 'Courier New', Courier, monospace;
-        }
-
-        .message-content code:not(pre code) {
-            background-color: rgba(0, 0, 0, 0.05);
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .message-content ul, 
-        .message-content ol {
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-
-        .message-content ul li, 
-        .message-content ol li {
-            margin-bottom: 5px;
-        }
-
-        .message-timestamp {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-top: 5px;
-            padding: 0 12px;
-        }
-
-        .message-user .message-timestamp {
-            text-align: right;
-        }
-
-        .loading-dots {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--loading-color);
-            margin: 0 2px;
-            animation: bounce 1.5s infinite;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .chat-footer {
-            padding: 15px 20px;
-            background-color: var(--card-color);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-container {
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-        }
-
-        .message-input {
-            flex: 1;
-            padding: 15px 50px 15px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 1rem;
-            resize: none;
-            transition: all 0.2s;
-            height: 54px;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: var(--background-color);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .message-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.1);
-        }
-
-        .send-button {
-            position: absolute;
-            right: 8px;
-            bottom: 10px;
-            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
-            color: white;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .send-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .send-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .send-button:disabled {
-            background: linear-gradient(45deg, #b39ddb, #d1c4e9);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .input-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-        }
-
-        .input-hints {
-            display: flex;
-            gap: 8px;
-        }
-
-        .hint-button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 12px;
-            transition: all 0.2s;
-            background-color: var(--background-color);
-        }
-
-        .hint-button:hover {
-            background-color: var(--primary-light);
-            color: white;
-        }
-
-        .input-info {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        .sources-section {
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
-            padding-top: 8px;
-        }
-
-        .sources-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-        }
-
-        .sources-title i {
-            margin-right: 5px;
-            color: var(--primary-color);
-        }
-
-        .sources-list {
-            list-style: none;
-        }
-
-        .source-item {
-            display: flex;
-            margin-bottom: 10px;
-            background-color: rgba(255, 255, 255, 0.5);
-            padding: 8px;
-            border-radius: 6px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .source-item-content {
-            flex: 1;
-        }
-
-        .source-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .source-score {
-            color: var(--primary-color);
-            font-size: 0.8rem;
-        }
-
-        .source-snippet {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            background-color: rgba(0, 0, 0, 0.03);
-            padding: 6px;
-            border-radius: 4px;
-            margin-top: 5px;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            overflow-x: auto;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-color);
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            transform: translateY(-20px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            max-width: 400px;
-        }
-
-        .notification.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .notification.success {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .notification.error {
-            border-left: 4px solid var(--error-color);
-        }
-
-        .notification.info {
-            border-left: 4px solid var(--secondary-color);
-        }
-
-        .notification.warning {
-            border-left: 4px solid var(--warning-color);
-        }
-
-        .notification i {
-            font-size: 1.2rem;
-        }
-
-        .notification.success i {
-            color: var(--success-color);
-        }
-
-        .notification.error i {
-            color: var(--error-color);
-        }
-
-        .notification.info i {
-            color: var(--secondary-color);
-        }
-
-        .notification.warning i {
-            color: var(--warning-color);
-        }
-
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--text-secondary);
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            color: var(--primary-light);
-            margin-bottom: 1.5rem;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-
-        .empty-state p {
-            max-width: 500px;
-            margin-bottom: 1.5rem;
-        }
-
-        .empty-state-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .empty-state-btn {
-            padding: 8px 16px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-
-        .empty-state-btn i {
-            font-size: 0.9rem;
-            margin-right: 6px;
-            margin-bottom: 0;
-            opacity: 1;
-        }
-
-        .empty-state-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* Responsive styles */
-        @media (max-width: 900px) {
-            .sidebar {
-                position: fixed;
-                left: -280px;
-                top: 0;
-                bottom: 0;
-                transition: left 0.3s;
-            }
-
-            .sidebar.visible {
-                left: 0;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .message {
-                max-width: 90%;
-            }
-
-            .chat-messages {
-                padding: 15px 10px;
-            }
-
-            .message-avatar {
-                width: 30px;
-                height: 30px;
-                font-size: 0.8rem;
-            }
-
-            .input-hints {
-                display: none;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="app-container">
         <div class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-robot"></i>
-                <h2>ASOP Chat</h2>
+                <h2>CAG System</h2>
             </div>
 
             <div class="sidebar-section">
@@ -845,7 +42,7 @@
                         <i class="fas fa-list"></i>
                         <span>Main Topics</span>
                     </div>
-                    <div class="question-option" data-question="How does this RAG system work?">
+                    <div class="question-option" data-question="How does this CAG system work?">
                         <i class="fas fa-question-circle"></i>
                         <span>System Overview</span>
                     </div>
@@ -871,9 +68,29 @@
                     </div>
                     <input type="number" id="top-k-input" min="1" max="10" value="3">
                 </div>
+
+                <div class="retrieval-settings" style="margin-top: 15px;">
+                    <div class="retrieval-settings-header">
+                        <i class="fas fa-database"></i>
+                        <label for="use-cache-checkbox">Cache Settings</label>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="use-cache-checkbox" checked style="margin-right: 5px;">
+                            <label for="use-cache-checkbox" style="font-size: 0.85rem;">Use Cache</label>
+                        </div>
+                        <button id="clear-cache-btn" style="background-color: var(--primary-color); border: none; color: white; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem;">
+                            Clear Cache
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="sidebar-footer">
+                <a href="#" id="cache-stats-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    Cache Statistics
+                </a>
                 <a href="#" id="refresh-index-btn">
                     <i class="fas fa-sync-alt"></i>
                     Refresh Index
@@ -888,9 +105,12 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <i class="fas fa-comments chat-title-icon"></i>
-                    <h2 class="chat-title">ASOP Document Assistant (BAAI/bge-m3)</h2>
+                    <h2 class="chat-title">Cache Augmented Generation (CAG) System</h2>
                 </div>
                 <div class="chat-header-right">
+                    <button class="header-btn" id="cache-stats-btn-header" title="Cache Statistics">
+                        <i class="fas fa-database"></i>
+                    </button>
                     <button class="header-btn" id="refresh-btn" title="Refresh Status">
                         <i class="fas fa-sync-alt"></i>
                     </button>
@@ -903,8 +123,8 @@
             <div class="chat-messages" id="chat-messages">
                 <div class="empty-state" id="empty-state">
                     <i class="fas fa-robot"></i>
-                    <h3>Welcome to ASOP Document Chat</h3>
-                    <p>Ask questions about your indexed of ACTUARIAL STANDARD OF PRACTICE (ASOP) documents to get instant answers powered by AI. The documents can be found here:  <a href="https://www.actuarialstandardsboard.org/standards-of-practice/">https://www.actuarialstandardsboard.org/standards-of-practice/</a>. Your questions will be analyzed and matched with the most relevant content from ASOP documents. This RAG system is using HuggingFaceEmbedding - <a href="https://huggingface.co/BAAI/bge-m3">BAAI/bge-m3</a>.  This embedding should be more detailed then MimiLM. Power by Mac Mini M4.</p>
+                    <h3>Welcome to the Cache Augmented Generation System</h3>
+                    <p>Ask questions about your indexed documents to get instant answers powered by AI. This Context-Augmented Generation (CAG) system enhances traditional RAG with caching mechanisms, preloaded topics, and semantic matching for faster responses. The CAG system preloads a curated set of relevant data and caches inference states to provide faster, more consistent answers to common questions. View our <a href="system_architecture.svg">System Architecture Diagram</a> and <a href="system_workflow.svg">System Workflow Diagram</a> to understand how it works.</p>
                     <div class="empty-state-actions">
                         <button class="empty-state-btn" id="start-chat-btn">
                             <i class="fas fa-comments"></i> Start Chatting
@@ -936,475 +156,85 @@
         <div class="notification-text">This is a notification</div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // API endpoint - Update to match the API server port..
-            const API_URL = 'https://duong.casa/cache';
-            
-            // Elements
-            const chatMessages = document.getElementById('chat-messages');
-            const emptyState = document.getElementById('empty-state');
-            const messageInput = document.getElementById('message-input');
-            const sendButton = document.getElementById('send-button');
-            const modelSelect = document.getElementById('model-select');
-            const topKInput = document.getElementById('top-k-input');
-            const clearBtn = document.getElementById('clear-btn');
-            const refreshBtn = document.getElementById('refresh-btn');
-            const refreshIndexBtn = document.getElementById('refresh-index-btn');
-            const menuToggle = document.getElementById('menu-toggle');
-            const sidebar = document.querySelector('.sidebar');
-            const questionOptions = document.querySelectorAll('.question-option');
-            const startChatBtn = document.getElementById('start-chat-btn');
-            const hintButtons = document.querySelectorAll('.hint-button');
-            const notification = document.getElementById('notification');
-            
-            // State
-            let isProcessing = false;
-            let chatStarted = false;
-            
-            // Event listeners
-            messageInput.addEventListener('input', adjustTextareaHeight);
-            messageInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            sendButton.addEventListener('click', sendMessage);
-            clearBtn.addEventListener('click', clearChat);
-            refreshBtn.addEventListener('click', checkStatus);
-            refreshIndexBtn.addEventListener('click', refreshIndex);
-            menuToggle.addEventListener('click', toggleSidebar);
-            startChatBtn.addEventListener('click', startChat);
-            
-            // Initialize
-            fetchModels();
-            checkStatus();
-            
-            // Question options
-            questionOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const question = this.getAttribute('data-question');
-                    messageInput.value = question;
-                    adjustTextareaHeight();
-                    
-                    if (window.innerWidth <= 900) {
-                        toggleSidebar();
-                    }
-                    
-                    // Focus on input
-                    messageInput.focus();
-                });
-            });
-            
-            // Hint buttons
-            hintButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const hint = this.getAttribute('data-hint');
-                    
-                    let template = '';
-                    
-                    switch (hint) {
-                        case 'summarize':
-                            template = 'Please summarize the main points from all documents.';
-                            break;
-                        case 'compare':
-                            template = 'Compare and contrast the main topics in the documents.';
-                            break;
-                        case 'extract':
-                            template = 'Extract the key points from all documents.';    
-                        break;
-                    }
-                    
-                    messageInput.value = template;
-                    adjustTextareaHeight();
-                    messageInput.focus();
-                });
-            });
-            
-            function startChat() {
-                if (chatStarted) return;
-                
-                // Remove empty state
-                emptyState.remove();
-                
-                // Add welcome message
-                addBotMessage(`👋 Welcome to ASOP Document Chat! I'm your AI assistant to help you explore and understand your ASOP documents. 
-
-You can ask me questions about any indexed ASOP documents, and I'll use my knowledge to provide relevant information and insights. Try asking about specific topics, requesting summaries, or inquiring about relationships between concepts in your documents.
-
-How can I help you today?`);
-                
-                chatStarted = true;
-                
-                // Focus on input
-                messageInput.focus();
-            }
-            
-            function adjustTextareaHeight() {
-                messageInput.style.height = 'auto';
-                messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
-            }
-            
-            function toggleSidebar() {
-                sidebar.classList.toggle('visible');
-            }
-            
-            function clearChat() {
-                if (isProcessing) return;
-                
-                chatMessages.innerHTML = '';
-                chatStarted = false;
-                
-                // Show empty state
-                chatMessages.appendChild(emptyState);
-                
-                showNotification('info', 'Chat cleared');
-            }
-            
-            function refreshIndex() {
-                if (isProcessing) return;
-                
-                refreshIndexBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
-                
-                // Call API to refresh index status
-                fetch(`${API_URL}/status`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'online') {
-                            showNotification('success', 'Index refreshed successfully');
-                        } else {
-                            showNotification('error', 'System appears to be offline');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error refreshing index:', error);
-                        showNotification('error', 'Failed to refresh index status');
-                    })
-                    .finally(() => {
-                        refreshIndexBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Index';
-                    });
-            }
-            
-            function sendMessage() {
-                if (isProcessing) return;
-                
-                const message = messageInput.value.trim();
-                if (message === '') return;
-                
-                // Start chat if not started
-                if (!chatStarted) {
-                    startChat();
-                }
-                
-                // Add user message
-                addUserMessage(message);
-                
-                // Clear input
-                messageInput.value = '';
-                messageInput.style.height = '54px';
-                
-                // Add loading message
-                isProcessing = true;
-                sendButton.disabled = true;
-                const botMessageElement = addBotMessage('', true);
-                
-                // Get model and top_k
-                const model = modelSelect.value;
-                const topK = parseInt(topKInput.value) || 3;
-                
-                // Call API
-                fetch(`${API_URL}/query`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        query: message,
-                        model: model,
-                        top_k: topK
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        updateBotMessage(botMessageElement, `❌ Error: ${data.error}`);
-                        showNotification('error', data.error);
-                    } else {
-                        // Format sources with enhanced information
-                        let sourcesHtml = '';
-                        if (data.sources && data.sources.length > 0) {
-                            sourcesHtml = `
-                                <div class="sources-section">
-                                    <div class="sources-title">
-                                        <i class="fas fa-bookmark"></i> Sources (${data.sources.length}):
-                                    </div>
-                                    <div class="sources-list">
-                                        ${data.sources.map((source, index) => {
-                                            let scoreHtml = '';
-                                            if (source.score !== null) {
-                                                scoreHtml = `<div class="source-score">Relevance: ${source.score.toFixed(4)}</div>`;
-                                            }
-                                            
-                                            let snippetHtml = '';
-                                            if (source.text_snippet) {
-                                                snippetHtml = `<div class="source-snippet">${escapeHtml(source.text_snippet)}</div>`;
-                                            }
-                                            
-                                            return `
-                                                <div class="source-item">
-                                                    <div class="source-item-content">
-                                                        <div class="source-header">
-                                                            <div>${index + 1}. ${source.file_name || 'Unknown'} (${source.file_type || 'Unknown'})</div>
-                                                            ${scoreHtml}
-                                                        </div>
-                                                        ${snippetHtml}
-                                                    </div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        
-                        updateBotMessage(botMessageElement, data.response, sourcesHtml);
-                        
-                        // Show notification about model used
-                        showNotification('info', `Answered using ${data.model_used} with ${data.sources ? data.sources.length : 0} documents`);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    updateBotMessage(botMessageElement, '❌ Sorry, there was an error connecting to the server. Please try again later.');
-                    showNotification('error', 'Connection error');
-                })
-                .finally(() => {
-                    isProcessing = false;
-                    sendButton.disabled = false;
-                });
-            }
-            
-            function addUserMessage(text) {
-                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
-                const messageElement = document.createElement('div');
-                messageElement.className = 'message message-user';
-                messageElement.innerHTML = `
-                    <div class="message-content-wrapper">
-                        <div class="message-bubble">
-                            <div class="message-content">
-                                <p>${escapeHtml(text)}</p>
-                            </div>
+    <!-- Cache Statistics Modal -->
+    <div id="cache-stats-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cache Statistics</h3>
+                <button id="close-modal-btn" class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-section">
+                    <h4>Inference Cache</h4>
+                    <div class="stats-box">
+                        <div class="stats-row">
+                            <span>Cache Size:</span>
+                            <span id="cache-size">0</span>
                         </div>
-                        <div class="message-avatar">
-                            <i class="fas fa-user"></i>
+                        <div class="stats-row">
+                            <span>Cache Capacity:</span>
+                            <span id="cache-capacity">1000</span>
+                        </div>
+                        <div class="stats-row">
+                            <span>Cache Utilization:</span>
+                            <span id="cache-utilization">0%</span>
+                        </div>
+                        <div class="stats-row">
+                            <span>Cache Hits:</span>
+                            <span id="cache-hits">0</span>
                         </div>
                     </div>
-                    <div class="message-timestamp">${timestamp}</div>
-                `;
-                
-                chatMessages.appendChild(messageElement);
-                scrollToBottom();
-                
-                return messageElement;
-            }
-            
-            function addBotMessage(text, isLoading = false) {
-                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
-                const messageElement = document.createElement('div');
-                messageElement.className = 'message message-bot';
-                
-                if (isLoading) {
-                    messageElement.innerHTML = `
-                        <div class="message-content-wrapper">
-                            <div class="message-avatar">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="message-bubble">
-                                <div class="message-content">
-                                    <div class="loading-dots">
-                                        <div class="dot"></div>
-                                        <div class="dot"></div>
-                                        <div class="dot"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="message-timestamp">${timestamp}</div>
-                    `;
-                } else {
-                    messageElement.innerHTML = `
-                        <div class="message-content-wrapper">
-                            <div class="message-avatar">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="message-bubble">
-                                <div class="message-content">
-                                    ${parseMarkdown(text)}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="message-timestamp">${timestamp}</div>
-                    `;
-                }
-                
-                chatMessages.appendChild(messageElement);
-                scrollToBottom();
-                
-                return messageElement;
-            }
-            
-            function updateBotMessage(messageElement, text, sourcesHtml = '') {
-                const contentWrapper = messageElement.querySelector('.message-content-wrapper');
-                const bubble = messageElement.querySelector('.message-bubble');
-                const content = messageElement.querySelector('.message-content');
-                
-                content.innerHTML = parseMarkdown(text);
-                
-                if (sourcesHtml) {
-                    bubble.innerHTML = content.outerHTML + sourcesHtml;
-                }
-                
-                // Highlight code blocks
-                const codeBlocks = messageElement.querySelectorAll('pre code');
-                codeBlocks.forEach(block => {
-                    hljs.highlightElement(block);
-                });
-                
-                scrollToBottom();
-            }
-            
-            function parseMarkdown(text) {
-                // Configure marked options
-                marked.setOptions({
-                    highlight: function(code, lang) {
-                        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                        return hljs.highlight(code, { language }).value;
-                    },
-                    breaks: true,
-                    gfm: true
-                });
-                
-                // Parse and return the markdown
-                return marked.parse(text);
-            }
-            
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-            
-            function scrollToBottom() {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-            
-            function showNotification(type, message) {
-                notification.className = `notification ${type}`;
-                
-                let iconClass;
-                switch (type) {
-                    case 'success':
-                        iconClass = 'fa-check-circle';
-                        break;
-                    case 'error':
-                        iconClass = 'fa-exclamation-circle';
-                        break;
-                    case 'warning':
-                        iconClass = 'fa-exclamation-triangle';
-                        break;
-                    default:
-                        iconClass = 'fa-info-circle';
-                }
-                
-                notification.innerHTML = `
-                    <i class="fas ${iconClass}"></i>
-                    <div class="notification-text">${message}</div>
-                `;
-                
-                notification.classList.add('visible');
-                
-                setTimeout(() => {
-                    notification.classList.remove('visible');
-                }, 3000);
-            }
-            
-            function checkStatus() {
-                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                
-                fetch(`${API_URL}/status`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'online') {
-                            if (data.index_loaded) {
-                                showNotification('success', `System online with ${data.document_count || 0} documents indexed`);
-                                
-                                // Additional info for embedding model
-                                const embedInfo = data.embedding_model ? ` using ${data.embedding_model}` : '';
-                                
-                                // Update the chat header to show additional info
-                                document.querySelector('.chat-title').innerHTML = `ASOP Document Assistant - BAAI/bge-m3<small style="font-size: 0.7em; opacity: 0.7;">(${data.document_count || 0} docs${embedInfo})</small>`;
-                            } else {
-                                showNotification('warning', 'No documents are indexed yet. Please run setup_rag.py first.');
-                            }
-                        } else {
-                            showNotification('error', 'System appears to be offline');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error checking system status:', error);
-                        showNotification('error', 'Could not connect to the server');
-                    })
-                    .finally(() => {
-                        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-                    });
-            }
-            
-            function fetchModels() {
-                fetch(`${API_URL}/models`)
-                    .then(response => response.json())
-                    .then(data => {
-                        modelSelect.innerHTML = '';
-                        
-                        if (data.models && data.models.length > 0) {
-                            data.models.forEach(model => {
-                                const option = document.createElement('option');
-                                option.value = model;
-                                option.textContent = model;
-                                // Set phi4:14b as the default selected option
-                                if (model === 'phi4:14b') {
-                                    option.selected = true;
-                                }
-                                modelSelect.appendChild(option);
-                            });
-                            
-                            // If phi4:14b isn't in the list, select it manually
-                            if (!data.models.includes('phi4:14b')) {
-                                const option = document.createElement('option');
-                                option.value = 'phi4:14b';
-                                option.textContent = 'phi4:14b (Default)';
-                                option.selected = true;
-                                modelSelect.appendChild(option);
-                            }
-                        } else {
-                            // Default option if no models found
-                            const option = document.createElement('option');
-                            option.value = 'phi4:14b';
-                            option.textContent = 'phi4:14b (Default)';
-                            option.selected = true;
-                            modelSelect.appendChild(option);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching models:', error);
-                        // Set default option on error
-                        modelSelect.innerHTML = '<option value="phi4:14b">phi4:14b (Default)</option>';
-                    });
-            }
-        });
-    </script>
+                </div>
+                <div class="stats-section">
+                    <h4>Preloaded Topics</h4>
+                    <div id="preloaded-topics-list" class="topics-list">
+                        <div style="text-align: center; color: var(--text-secondary);">No preloaded topics found</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="preload-topic-btn" class="modal-btn primary-btn">
+                    Preload Topic
+                </button>
+                <button id="clear-all-cache-btn" class="modal-btn danger-btn">
+                    Clear All Caches
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preload Topic Modal -->
+    <div id="preload-topic-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Preload Topic</h3>
+                <button id="close-preload-modal-btn" class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 15px;">
+                    <label for="preload-topic-input">Topic or Question:</label>
+                    <input type="text" id="preload-topic-input" class="message-input" placeholder="Enter a topic or question to preload...">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="preload-description-input">Description (optional):</label>
+                    <input type="text" id="preload-description-input" class="message-input" placeholder="Enter a description for this topic...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-preload-btn" class="modal-btn" style="background-color: var(--background-color); border: 1px solid var(--border-color); color: var(--text-color);">
+                    Cancel
+                </button>
+                <button id="submit-preload-btn" class="modal-btn primary-btn">
+                    Preload
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
