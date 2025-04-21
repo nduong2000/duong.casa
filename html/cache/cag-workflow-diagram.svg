@@ -1,0 +1,166 @@
+<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1000" height="1000" fill="#f8f9fa" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="500" y="40" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle">Cache Augmented Generation (CAG) System Workflow</text>
+  
+  <!-- Setup Workflow -->
+  <rect x="50" y="80" width="900" height="220" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="105" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Setup Workflow (setup_cache.py)</text>
+  
+  <!-- Setup Steps -->
+  <rect x="100" y="130" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="180" y="160" font-family="Arial" font-size="14" text-anchor="middle">Load Documents</text>
+  
+  <rect x="300" y="130" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="380" y="160" font-family="Arial" font-size="14" text-anchor="middle">Extract Metadata</text>
+  
+  <rect x="500" y="130" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="580" y="152" font-family="Arial" font-size="14" text-anchor="middle">Create Index with</text>
+  <text x="580" y="172" font-family="Arial" font-size="14" text-anchor="middle">BGE-M3 Embeddings</text>
+  
+  <rect x="700" y="130" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="780" y="160" font-family="Arial" font-size="14" text-anchor="middle">Save to Chroma DB</text>
+  
+  <rect x="100" y="220" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="180" y="242" font-family="Arial" font-size="14" text-anchor="middle">Extract Potential</text>
+  <text x="180" y="262" font-family="Arial" font-size="14" text-anchor="middle">Topics</text>
+  
+  <rect x="300" y="220" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="380" y="242" font-family="Arial" font-size="14" text-anchor="middle">Preload Common</text>
+  <text x="380" y="262" font-family="Arial" font-size="14" text-anchor="middle">Topics</text>
+  
+  <rect x="500" y="220" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="580" y="242" font-family="Arial" font-size="14" text-anchor="middle">Initialize Cache</text>
+  <text x="580" y="262" font-family="Arial" font-size="14" text-anchor="middle">Structure</text>
+  
+  <rect x="700" y="220" width="160" height="50" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="780" y="242" font-family="Arial" font-size="14" text-anchor="middle">Save Topic</text>
+  <text x="780" y="262" font-family="Arial" font-size="14" text-anchor="middle">Embeddings</text>
+  
+  <!-- Arrows for Setup -->
+  <line x1="260" y1="155" x2="300" y2="155" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="460" y1="155" x2="500" y2="155" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="660" y1="155" x2="700" y2="155" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="780" y1="180" x2="780" y2="220" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="700" y1="245" x2="660" y2="245" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="500" y1="245" x2="460" y2="245" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="300" y1="245" x2="260" y2="245" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Query Processing Workflow -->
+  <rect x="50" y="320" width="900" height="650" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="345" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Query Processing Workflow (api_server_cache.py)</text>
+  
+  <!-- Initial Step -->
+  <rect x="400" y="380" width="200" height="50" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="410" font-family="Arial" font-size="16" text-anchor="middle">Receive Query</text>
+  
+  <!-- Cache Check Decision -->
+  <polygon points="500,450 450,500 500,550 550,500" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+  <text x="500" y="505" font-family="Arial" font-size="14" text-anchor="middle">Check Cache?</text>
+  
+  <!-- Cache Path -->
+  <rect x="200" y="530" width="180" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5" ry="5"/>
+  <text x="290" y="545" font-family="Arial" font-size="14" text-anchor="middle">Generate</text>
+  <text x="290" y="565" font-family="Arial" font-size="14" text-anchor="middle">Cache Key</text>
+  
+  <polygon points="290,600 240,650 290,700 340,650" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+  <text x="290" y="655" font-family="Arial" font-size="14" text-anchor="middle">Cache Hit?</text>
+  
+  <rect x="100" y="700" width="180" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5" ry="5"/>
+  <text x="190" y="715" font-family="Arial" font-size="14" text-anchor="middle">Retrieve</text>
+  <text x="190" y="735" font-family="Arial" font-size="14" text-anchor="middle">Cached Result</text>
+  
+  <polygon points="290,750 240,800 290,850 340,800" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+  <text x="290" y="790" font-family="Arial" font-size="13" text-anchor="middle">Check</text>
+  <text x="290" y="810" font-family="Arial" font-size="13" text-anchor="middle">Preloaded</text>
+  <text x="290" y="830" font-family="Arial" font-size="13" text-anchor="middle">Topics?</text>
+  
+  <rect x="100" y="850" width="180" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5" ry="5"/>
+  <text x="190" y="870" font-family="Arial" font-size="14" text-anchor="middle">Find Matching</text>
+  <text x="190" y="890" font-family="Arial" font-size="14" text-anchor="middle">Preloaded Topic</text>
+  <text x="190" y="910" font-family="Arial" font-size="12" text-anchor="middle">(Semantic Matching)</text>
+  
+  <!-- Standard RAG Path -->
+  <rect x="650" y="580" width="180" height="60" fill="#e1bee7" stroke="#9c27b0" stroke-width="2" rx="5" ry="5"/>
+  <text x="740" y="600" font-family="Arial" font-size="14" text-anchor="middle">Initialize phi4</text>
+  <text x="740" y="620" font-family="Arial" font-size="14" text-anchor="middle">via Ollama</text>
+  
+  <rect x="650" y="660" width="180" height="60" fill="#e1bee7" stroke="#9c27b0" stroke-width="2" rx="5" ry="5"/>
+  <text x="740" y="680" font-family="Arial" font-size="14" text-anchor="middle">Create Query</text>
+  <text x="740" y="700" font-family="Arial" font-size="14" text-anchor="middle">Engine</text>
+  
+  <rect x="650" y="740" width="180" height="60" fill="#e1bee7" stroke="#9c27b0" stroke-width="2" rx="5" ry="5"/>
+  <text x="740" y="760" font-family="Arial" font-size="14" text-anchor="middle">Retrieve Relevant</text>
+  <text x="740" y="780" font-family="Arial" font-size="14" text-anchor="middle">Documents</text>
+  
+  <rect x="650" y="820" width="180" height="60" fill="#e1bee7" stroke="#9c27b0" stroke-width="2" rx="5" ry="5"/>
+  <text x="740" y="840" font-family="Arial" font-size="14" text-anchor="middle">Generate</text>
+  <text x="740" y="860" font-family="Arial" font-size="14" text-anchor="middle">Response</text>
+  
+  <rect x="650" y="900" width="180" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5" ry="5"/>
+  <text x="740" y="915" font-family="Arial" font-size="14" text-anchor="middle">Cache Result for</text>
+  <text x="740" y="935" font-family="Arial" font-size="14" text-anchor="middle">Future Queries</text>
+  
+  <!-- Result Return -->
+  <rect x="400" y="900" width="200" height="50" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="930" font-family="Arial" font-size="16" text-anchor="middle">Return Response</text>
+  
+  <!-- Arrows for Query Processing -->
+  <!-- Initial flow -->
+  <line x1="500" y1="430" x2="500" y2="450" stroke="#1e88e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Cache decision paths -->
+  <line x1="450" y1="500" x2="380" y2="500" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="405" y="490" font-family="Arial" font-size="12">Yes</text>
+  
+  <line x1="380" y1="500" x2="290" y2="530" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="290" y1="580" x2="290" y2="600" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <line x1="240" y1="650" x2="190" y2="700" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="210" y="665" font-family="Arial" font-size="12">Yes</text>
+  
+  <line x1="190" y1="750" x2="190" y2="850" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="290" y1="750" x2="290" y2="650" stroke="#ff9800" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="305" y="700" font-family="Arial" font-size="12">No</text>
+  
+  <line x1="190" y1="910" x2="190" y2="925" stroke="#ff9800" stroke-width="2"/>
+  <line x1="190" y1="925" x2="400" y2="925" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="250" y="915" font-family="Arial" font-size="12">Topic Found</text>
+  
+  <!-- Standard RAG path -->
+  <line x1="550" y1="500" x2="740" y2="500" stroke="#9c27b0" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="620" y="490" font-family="Arial" font-size="12">No (Standard RAG)</text>
+  
+  <line x1="740" y1="500" x2="740" y2="580" stroke="#9c27b0" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="740" y1="640" x2="740" y2="660" stroke="#9c27b0" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="740" y1="720" x2="740" y2="740" stroke="#9c27b0" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="740" y1="800" x2="740" y2="820" stroke="#9c27b0" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="740" y1="880" x2="740" y2="900" stroke="#9c27b0" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <line x1="650" y1="925" x2="600" y2="925" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- No match paths -->
+  <line x1="240" y1="800" x2="190" y2="850" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="200" y="815" font-family="Arial" font-size="12">Yes</text>
+  
+  <line x1="340" y1="800" x2="450" y2="800" stroke="#ff9800" stroke-width="2"/>
+  <line x1="450" y1="800" x2="450" y2="580" stroke="#ff9800" stroke-width="2"/>
+  <line x1="450" y1="580" x2="650" y2="580" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="350" y="790" font-family="Arial" font-size="12">No</text>
+  
+  <line x1="340" y1="650" x2="450" y2="650" stroke="#ff9800" stroke-width="2"/>
+  <line x1="450" y1="650" x2="450" y2="580" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="350" y="640" font-family="Arial" font-size="12">No</text>
+  
+  <line x1="290" y1="850" x2="290" y2="950" stroke="#ff9800" stroke-width="2"/>
+  <line x1="290" y1="950" x2="400" y2="950" stroke="#ff9800" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="290" y="965" font-family="Arial" font-size="12">No Topic Found</text>
+  
+  <!-- Advanced Features -->
+  <rect x="100" y="380" width="280" height="130" fill="#e0f7fa" stroke="#00acc1" stroke-width="2" rx="5" ry="5" stroke-dasharray="5,5"/>
+  <text x="240" y="400" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Advanced Features (Optional)</text>
+  
+  <rect x="110" y="420" width="120" height="40" fill="#b2ebf2" stroke="#00acc1" stroke-width="2" rx="5" ry="5"/>
+  <text x="170" y="445" font-family="Arial" font-size="12" text-

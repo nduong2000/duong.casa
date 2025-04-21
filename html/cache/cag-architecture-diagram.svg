@@ -1,0 +1,105 @@
+<svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1000" height="600" fill="#f8f9fa" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="500" y="30" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle">Cache Augmented Generation (CAG) System Architecture</text>
+  
+  <!-- Client Layer -->
+  <rect x="50" y="70" width="900" height="80" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="100" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Client Layer</text>
+  <rect x="100" y="85" width="160" height="50" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="5" ry="5"/>
+  <text x="180" y="115" font-family="Arial" font-size="14" text-anchor="middle">Web Interface</text>
+  <rect x="300" y="85" width="160" height="50" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="5" ry="5"/>
+  <text x="380" y="115" font-family="Arial" font-size="14" text-anchor="middle">API Consumers</text>
+  <rect x="500" y="85" width="160" height="50" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="5" ry="5"/>
+  <text x="580" y="115" font-family="Arial" font-size="14" text-anchor="middle">Command Line</text>
+  <rect x="700" y="85" width="160" height="50" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="5" ry="5"/>
+  <text x="780" y="115" font-family="Arial" font-size="14" text-anchor="middle">Mobile Apps</text>
+  
+  <!-- API Layer -->
+  <rect x="50" y="170" width="900" height="100" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="195" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">API Layer (Flask)</text>
+  <rect x="100" y="210" width="160" height="40" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="180" y="235" font-family="Arial" font-size="14" text-anchor="middle">/query Endpoint</text>
+  <rect x="300" y="210" width="160" height="40" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="380" y="235" font-family="Arial" font-size="14" text-anchor="middle">/status Endpoint</text>
+  <rect x="500" y="210" width="160" height="40" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="580" y="235" font-family="Arial" font-size="14" text-anchor="middle">/preload Endpoint</text>
+  <rect x="700" y="210" width="160" height="40" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="5" ry="5"/>
+  <text x="780" y="235" font-family="Arial" font-size="14" text-anchor="middle">/cache/* Endpoints</text>
+  
+  <!-- Cache Layer -->
+  <rect x="50" y="290" width="900" height="120" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="315" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Cache Layer</text>
+  
+  <rect x="100" y="330" width="270" height="60" fill="#ffe0b2" stroke="#fb8c00" stroke-width="2" rx="5" ry="5"/>
+  <text x="235" y="355" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Inference Cache</text>
+  <text x="235" y="375" font-family="Arial" font-size="12" text-anchor="middle">LRU Cache for Query Results</text>
+  
+  <rect x="450" y="330" width="140" height="60" fill="#ffe0b2" stroke="#fb8c00" stroke-width="2" rx="5" ry="5"/>
+  <text x="520" y="355" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Preloaded</text>
+  <text x="520" y="375" font-family="Arial" font-size="12" text-anchor="middle">Topic Caches</text>
+  
+  <rect x="650" y="330" width="220" height="60" fill="#ffe0b2" stroke="#fb8c00" stroke-width="2" rx="5" ry="5"/>
+  <text x="760" y="355" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Semantic Matching</text>
+  <text x="760" y="375" font-family="Arial" font-size="12" text-anchor="middle">Query Similarity Detection</text>
+  
+  <!-- Core RAG Layer -->
+  <rect x="50" y="430" width="900" height="140" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="5" ry="5"/>
+  <text x="500" y="455" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Core RAG System</text>
+  
+  <rect x="100" y="480" width="160" height="70" fill="#e1bee7" stroke="#8e24aa" stroke-width="2" rx="5" ry="5"/>
+  <text x="180" y="505" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">BGE-M3</text>
+  <text x="180" y="525" font-family="Arial" font-size="12" text-anchor="middle">Embedding Model</text>
+  <text x="180" y="540" font-family="Arial" font-size="10" text-anchor="middle">(1024 dimensions)</text>
+  
+  <rect x="300" y="480" width="160" height="70" fill="#e1bee7" stroke="#8e24aa" stroke-width="2" rx="5" ry="5"/>
+  <text x="380" y="505" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Vector Store</text>
+  <text x="380" y="525" font-family="Arial" font-size="12" text-anchor="middle">Chroma DB</text>
+  <text x="380" y="540" font-family="Arial" font-size="10" text-anchor="middle">(Document Index)</text>
+  
+  <rect x="500" y="480" width="160" height="70" fill="#e1bee7" stroke="#8e24aa" stroke-width="2" rx="5" ry="5"/>
+  <text x="580" y="505" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Query Engine</text>
+  <text x="580" y="525" font-family="Arial" font-size="12" text-anchor="middle">LlamaIndex</text>
+  <text x="580" y="540" font-family="Arial" font-size="10" text-anchor="middle">(Retrieval & Generation)</text>
+  
+  <rect x="700" y="480" width="160" height="70" fill="#e1bee7" stroke="#8e24aa" stroke-width="2" rx="5" ry="5"/>
+  <text x="780" y="505" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">LLM</text>
+  <text x="780" y="525" font-family="Arial" font-size="12" text-anchor="middle">phi4:14b</text>
+  <text x="780" y="540" font-family="Arial" font-size="10" text-anchor="middle">(via Ollama)</text>
+  
+  <!-- Arrows -->
+  <!-- Client to API -->
+  <line x1="180" y1="135" x2="180" y2="170" stroke="#1e88e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="380" y1="135" x2="380" y2="170" stroke="#1e88e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="580" y1="135" x2="580" y2="170" stroke="#1e88e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="780" y1="135" x2="780" y2="170" stroke="#1e88e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- API to Cache -->
+  <line x1="180" y1="250" x2="180" y2="330" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="580" y1="250" x2="520" y2="330" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="780" y1="250" x2="760" y2="330" stroke="#43a047" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Cache to RAG -->
+  <line x1="235" y1="390" x2="235" y2="480" stroke="#fb8c00" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="520" y1="390" x2="380" y2="480" stroke="#fb8c00" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="760" y1="390" x2="580" y2="480" stroke="#fb8c00" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- RAG Components -->
+  <line x1="180" y1="550" x2="300" y2="515" stroke="#8e24aa" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="460" y1="515" x2="500" y2="515" stroke="#8e24aa" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="660" y1="515" x2="700" y2="515" stroke="#8e24aa" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Definitions -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend -->
+  <rect x="730" y="35" width="220" height="25" fill="#fff" stroke="#333" stroke-width="1" rx="3" ry="3"/>
+  <text x="840" y="52" font-family="Arial" font-size="12" text-anchor="middle">Cache Enhancements to RAG</text>
+  <rect x="710" y="35" width="15" height="15" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="2" ry="2"/>
+</svg>
