@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // API endpoint - Update to match the local CAG server port
-    const API_URL = 'http://localhost:5004';
+    const API_URL = 'https://duong.casa/cache'
     
     // Elements
     const chatMessages = document.getElementById('chat-messages');

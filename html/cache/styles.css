@@ -1,30 +1,30 @@
-/* Dark Green Color Scheme */
+/* Dark Green with Tan Background Color Scheme */
 :root {
     --primary-color: #005C2E;      /* Dark Green */
     --primary-light: #00833E;      /* Medium Green */
     --primary-dark: #003D1E;       /* Darker Green */
     --secondary-color: #007556;    /* Teal Green */
     --accent-color: #57CC99;       /* Light Mint Green */
-    --background-color: #132A13;   /* Very Dark Green */
-    --card-color: #233D23;         /* Dark Green Gray */
+    --background-color: #E6DBC9;   /* Tan Background */
+    --card-color: #F2EAD3;         /* Lighter Tan */
     --sidebar-bg: #0B2B0B;         /* Darkest Green */
     --sidebar-hover: #1F3F1F;      /* Dark Green Hover */
     --sidebar-active: #2E5D2E;     /* Medium Dark Green Active */
-    --sidebar-text: #C7E8C7;       /* Light Green Text */
-    --text-color: #C7E8C7;         /* Light Green Text */
-    --text-secondary: #9AC99A;     /* Lighter Green Text */
+    --sidebar-text: #F2EAD3;       /* Light Tan Text */
+    --text-color: #2A3B23;         /* Dark Green Text */
+    --text-secondary: #4D6142;     /* Medium Green Text */
     --border-color: #2E5D2E;       /* Medium Dark Green Border */
-    --user-bubble: #184C18;        /* Dark Green User Bubble */
-    --user-bubble-border: #205220; /* Slightly Lighter Green Border */
-    --bot-bubble: #005C2E;         /* Dark Green Bot Bubble */
-    --bot-bubble-border: #00833E;  /* Medium Green Border */
-    --user-bubble-text: #C7E8C7;   /* Light Green Text */
-    --bot-bubble-text: #C7E8C7;    /* Light Green Text */
+    --user-bubble: #E6DBC9;        /* Tan User Bubble */
+    --user-bubble-border: #D5C5A9; /* Darker Tan Border */
+    --bot-bubble: #DDF5E3;         /* Light Mint Green Bot Bubble */
+    --bot-bubble-border: #B7E6C4;  /* Medium Mint Green Border */
+    --user-bubble-text: #2A3B23;   /* Dark Green Text */
+    --bot-bubble-text: #2A3B23;    /* Dark Green Text */
     --loading-color: #57CC99;      /* Light Mint Green Loading */
     --success-color: #57CC99;      /* Light Mint Green Success */
     --error-color: #D32F2F;        /* Red Error */
     --warning-color: #FF9800;      /* Orange Warning */
-    --code-background: #0B2B0B;    /* Darkest Green Code Background */
+    --code-background: #2A3B23;    /* Dark Green Code Background */
 }
 
 /* Global Styles */
@@ -154,9 +154,9 @@ body {
     width: 100%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: var(--primary-dark);
-    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
     font-size: 0.9rem;
     outline: none;
     transition: all 0.2s;
@@ -199,9 +199,9 @@ body {
     width: 100%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: var(--primary-dark);
-    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
     font-size: 0.9rem;
     outline: none;
     transition: all 0.2s;
