@@ -163,4 +163,39 @@
   <text x="240" y="400" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Advanced Features (Optional)</text>
   
   <rect x="110" y="420" width="120" height="40" fill="#b2ebf2" stroke="#00acc1" stroke-width="2" rx="5" ry="5"/>
-  <text x="170" y="445" font-family="Arial" font-size="12" text-
+  <text x="170" y="445" font-family="Arial" font-size="12" text-anchor="middle">Query Transformation</text>
+  
+  <rect x="250" y="420" width="120" height="40" fill="#b2ebf2" stroke="#00acc1" stroke-width="2" rx="5" ry="5"/>
+  <text x="310" y="445" font-family="Arial" font-size="12" text-anchor="middle">Self-Reflection</text>
+  
+  <rect x="110" y="470" width="120" height="40" fill="#b2ebf2" stroke="#00acc1" stroke-width="2" rx="5" ry="5"/>
+  <text x="170" y="495" font-family="Arial" font-size="12" text-anchor="middle">Hybrid Retrieval</text>
+  
+  <rect x="250" y="470" width="120" height="40" fill="#b2ebf2" stroke="#00acc1" stroke-width="2" rx="5" ry="5"/>
+  <text x="310" y="495" font-family="Arial" font-size="12" text-anchor="middle">Metadata Filtering</text>
+  
+  <!-- Definitions -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend -->
+  <rect x="820" y="370" width="120" height="140" fill="#fff" stroke="#333" stroke-width="1" rx="3" ry="3"/>
+  <text x="880" y="390" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">Legend</text>
+  
+  <rect x="830" y="400" width="15" height="15" fill="#c8e6c9" stroke="#43a047" stroke-width="2" rx="2" ry="2"/>
+  <text x="900" y="412" font-family="Arial" font-size="10" text-anchor="middle">Setup Process</text>
+  
+  <rect x="830" y="425" width="15" height="15" fill="#bbdefb" stroke="#1e88e5" stroke-width="2" rx="2" ry="2"/>
+  <text x="900" y="437" font-family="Arial" font-size="10" text-anchor="middle">API Endpoints</text>
+  
+  <rect x="830" y="450" width="15" height="15" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="2" ry="2"/>
+  <text x="900" y="462" font-family="Arial" font-size="10" text-anchor="middle">Caching Logic</text>
+  
+  <rect x="830" y="475" width="15" height="15" fill="#e1bee7" stroke="#9c27b0" stroke-width="2" rx="2" ry="2"/>
+  <text x="900" y="487" font-family="Arial" font-size="10" text-anchor="middle">RAG Components</text>
+  
+  <rect x="830" y="500" width="15" height="15" fill="#b2ebf2" stroke="#00acc1" stroke-width="2" rx="2" ry="2"/>
+  <text x="900" y="512" font-family="Arial" font-size="10" text-anchor="middle">Advanced Features</text>
