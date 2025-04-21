@@ -1,0 +1,119 @@
+<svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="900" height="700" fill="#f8f9fa" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="450" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">Context Augmented Generation (CAG) System Workflow</text>
+
+  <!-- Workflow Diagram -->
+  <!-- Start -->
+  <circle cx="450" cy="100" r="30" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+  <text x="450" y="105" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Start</text>
+
+  <!-- User Query -->
+  <rect x="350" y="160" width="200" height="60" rx="10" ry="10" fill="#bbdefb" stroke="#1976d2" stroke-width="2"/>
+  <text x="450" y="195" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">User Query</text>
+
+  <!-- Session Context Check -->
+  <path d="M450,250 L370,320 L450,390 L530,320 Z" fill="#ffe0b2" stroke="#f57c00" stroke-width="2"/>
+  <text x="450" y="325" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#333">Existing</text>
+  <text x="450" y="345" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#333">Session?</text>
+
+  <!-- Load Conversation History -->
+  <rect x="600" y="290" width="200" height="60" rx="10" ry="10" fill="#c8e6c9" stroke="#388e3c" stroke-width="2"/>
+  <text x="700" y="325" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Load Conversation</text>
+  <text x="700" y="345" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">History</text>
+
+  <!-- Create New Session -->
+  <rect x="150" y="290" width="200" height="60" rx="10" ry="10" fill="#c8e6c9" stroke="#388e3c" stroke-width="2"/>
+  <text x="250" y="325" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Create New</text>
+  <text x="250" y="345" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Session</text>
+
+  <!-- Intent Extraction -->
+  <rect x="350" y="410" width="200" height="60" rx="10" ry="10" fill="#e1bee7" stroke="#8e24aa" stroke-width="2"/>
+  <text x="450" y="445" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Extract Query Intent</text>
+
+  <!-- Generate Query Variations -->
+  <rect x="350" y="490" width="200" height="60" rx="10" ry="10" fill="#e1bee7" stroke="#8e24aa" stroke-width="2"/>
+  <text x="450" y="525" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Generate Query</text>
+  <text x="450" y="545" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Variations</text>
+
+  <!-- Document Retrieval -->
+  <rect x="150" y="570" width="200" height="60" rx="10" ry="10" fill="#ffcdd2" stroke="#c62828" stroke-width="2"/>
+  <text x="250" y="605" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Vector Store</text>
+  <text x="250" y="625" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Document Retrieval</text>
+
+  <!-- Response Generation -->
+  <rect x="600" y="570" width="200" height="60" rx="10" ry="10" fill="#ffccbc" stroke="#e64a19" stroke-width="2"/>
+  <text x="700" y="605" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Response Generation</text>
+  <text x="700" y="625" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">with LLM</text>
+
+  <!-- Context Enhancement -->
+  <rect x="350" y="650" width="200" height="60" rx="10" ry="10" fill="#b3e5fc" stroke="#0288d1" stroke-width="2"/>
+  <text x="450" y="685" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Enhance Response</text>
+  <text x="450" y="705" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">with Context</text>
+
+  <!-- Arrows -->
+  <!-- Start to Query -->
+  <path d="M450,130 L450,160" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Query to Context Check -->
+  <path d="M450,220 L450,250" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Context Check to New Session -->
+  <path d="M370,320 L350,320" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="355" y="315" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">No</text>
+  
+  <!-- Context Check to Load History -->
+  <path d="M530,320 L600,320" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="565" y="315" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">Yes</text>
+  
+  <!-- New Session to Intent Extraction -->
+  <path d="M250,350 L250,440 L350,440" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Load History to Intent Extraction -->
+  <path d="M700,350 L700,440 L550,440" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Intent Extraction to Query Variations -->
+  <path d="M450,470 L450,490" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Query Variations to Document Retrieval -->
+  <path d="M450,550 L450,600 L350,600" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Query Variations to Response Generation -->
+  <path d="M450,550 L450,600 L600,600" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Document Retrieval to Response Generation -->
+  <path d="M350,600 L600,600" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Response Generation to Context Enhancement -->
+  <path d="M700,630 L700,680 L550,680" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Context Enhancement to update session (dotted line back to top) -->
+  <path d="M450,650 L850,650 L850,120 L510,120" stroke="#333" stroke-width="2" stroke-dasharray="5,5" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="800" y="400" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#666" transform="rotate(-90 800,400)">Update Session Context</text>
+
+  <!-- Arrowhead definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- Special Components Labels -->
+  <!-- BGE-M3 Embedding -->
+  <rect x="100" y="500" width="150" height="40" rx="5" ry="5" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="175" y="525" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#3949ab">BGE-M3 Embeddings</text>
+  
+  <!-- Ollama Integration -->
+  <rect x="650" y="500" width="150" height="40" rx="5" ry="5" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="725" y="525" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#3949ab">Ollama LLM Models</text>
+  
+  <!-- Hybrid Retrieval -->
+  <rect x="100" y="430" width="150" height="40" rx="5" ry="5" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="175" y="455" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#3949ab">Query Fusion Retriever</text>
+  
+  <!-- Context-Awareness -->
+  <rect x="650" y="430" width="150" height="40" rx="5" ry="5" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="725" y="455" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#3949ab">Context Awareness</text>
+</svg>
