@@ -10,11 +10,28 @@
             --primary-color: #1a2a3a;
             --secondary-color: #2563eb;
             --accent-color: #f97316;
-            --light-color: #f8fafc;
-            --dark-color: #1a2a3a;
             --text-color: #333;
             --gradient-start: #2563eb;
             --gradient-end: #4f46e5;
+            --bg-color: #f5f5f5;
+            --card-bg: white;
+            --border-color: #e2e8f0;
+            --heading-color: #1a2a3a;
+            --footer-gradient-start: var(--primary-color);
+            --footer-gradient-end: #0F172A;
+        }
+
+        body.dark-mode {
+            --primary-color: #e2e8f0;
+            --text-color: #e2e8f0;
+            --gradient-start: #1e3a8a;
+            --gradient-end: #312e81;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #475569;
+            --heading-color: #f8fafc;
+            --footer-gradient-start: #0f172a;
+            --footer-gradient-end: #1e293b;
         }
         
         * {
@@ -27,7 +44,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: #f5f5f5;
+            background-color: var(--bg-color);
+            transition: background-color 0.3s, color 0.3s;
         }
         
         header {
@@ -37,6 +55,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            transition: background 0.3s;
         }
         
         header::before {
@@ -144,6 +163,57 @@
             color: white;
             text-decoration: none;
         }
+
+        .theme-switcher {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            align-items: center;
+            background-color: rgba(0,0,0,0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        .theme-switcher label {
+            margin-right: 8px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #theme-toggle {
+            appearance: none;
+            width: 40px;
+            height: 20px;
+            background-color: #555;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+
+        #theme-toggle::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        #theme-toggle:checked {
+            background-color: var(--secondary-color);
+        }
+
+        #theme-toggle:checked::before {
+            transform: translateX(20px);
+        }
         
         section {
             padding: 3rem 0;
@@ -153,9 +223,10 @@
             font-size: 2.2rem;
             text-align: center;
             margin-bottom: 2.5rem;
-            color: var(--primary-color);
+            color: var(--heading-color);
             position: relative;
             font-weight: 700;
+            transition: color 0.3s;
         }
         
         .section-title::before {
@@ -186,11 +257,12 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 2.5rem;
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 16px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s;
         }
         
         .about-content::before {
@@ -211,7 +283,7 @@
         }
         
         .project-card {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -219,7 +291,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
             position: relative;
         }
         
@@ -254,7 +326,7 @@
         
         .project-title {
             margin-bottom: 0.5rem;
-            color: var(--primary-color);
+            color: var(--heading-color);
         }
         
         .project-desc {
@@ -399,13 +471,14 @@
         }
         
         footer {
-            background: linear-gradient(135deg, var(--primary-color), #0F172A);
-            color: white;
+            background: linear-gradient(135deg, var(--footer-gradient-start), var(--footer-gradient-end));
+            color: #e2e8f0;
             text-align: center;
             padding: 2.5rem 0;
             margin-top: 4rem;
             position: relative;
             overflow: hidden;
+            transition: background .3s;
         }
         
         footer::before {
@@ -435,6 +508,10 @@
 </head>
 <body>
     <header>
+        <div class="theme-switcher">
+            <label for="theme-toggle">Dark Mode</label>
+            <input type="checkbox" id="theme-toggle">
+        </div>
         <div class="container">
             <div class="header-content">
                 <div class="profile-pic">
@@ -701,14 +778,16 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--heading-color);
         }
         
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -790,6 +869,37 @@
                 statusElement.style.display = 'block';
                 console.error('Error:', error);
             });
+        });
+    </script>
+
+    <script>
+        // Theme switcher logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            const applyTheme = () => {
+                const isDarkMode = localStorage.getItem('darkMode') === 'true';
+                if (themeToggle) {
+                    themeToggle.checked = isDarkMode;
+                }
+                body.classList.toggle('dark-mode', isDarkMode);
+            };
+
+            const toggleTheme = () => {
+                if (themeToggle) {
+                    const isDarkMode = themeToggle.checked;
+                    localStorage.setItem('darkMode', isDarkMode);
+                    body.classList.toggle('dark-mode', isDarkMode);
+                }
+            };
+
+            if (themeToggle) {
+                themeToggle.addEventListener('change', toggleTheme);
+            }
+
+            // Apply theme on page load
+            applyTheme();
         });
     </script>
 
